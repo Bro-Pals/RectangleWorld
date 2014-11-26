@@ -16,6 +16,7 @@ public class RectangleWorldServer {
 		ServerDialog serverDialog = null;
 		try {
 			server = new ServerSocket(SERVER_PORT);
+			server.setReuseAddress(true);
 			serverDialog = new ServerDialog(server);
 		} catch(IOException fsfs) {
 			System.err.println("Unable to create server at socket " + SERVER_PORT + ": " + fsfs.toString());
@@ -42,14 +43,11 @@ public class RectangleWorldServer {
 			} catch(SocketException socketException) {
 				System.out.println("Server got shutdown: " + socketException.toString());
 				/* Need to shutdown all clients here */
-				server.close();
 			} catch(Exception e) {
 				System.out.println("Error in main class: " + e.toString());
-				server.close();
 			}
 		}
 		serverDialog.dispose();
-		server.close();
 	}
 	
 	public static int getNewId() {
