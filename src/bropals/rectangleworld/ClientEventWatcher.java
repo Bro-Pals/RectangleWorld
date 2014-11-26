@@ -28,6 +28,7 @@ public class ClientEventWatcher implements Runnable {
 			String input = null;
 			System.out.println("Waiting for server input...");
 			while((input = in.readLine()) != null) {
+				System.out.println("LOOP : ClientEventWatcher:31");
 				System.out.println("Input: " + input);
 				GameEvent event = GameEventParser.parseMessage(input);
 				if (event != null) {

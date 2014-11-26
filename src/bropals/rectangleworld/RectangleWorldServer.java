@@ -30,6 +30,7 @@ public class RectangleWorldServer {
 		Socket nextSocket;
 		while (serverDialog.isRunning()) {
 			try {
+				System.out.println("LOOP : RectangleWorldServer:33");
 				serverDialog.print("Waiting for another client");
 				nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	

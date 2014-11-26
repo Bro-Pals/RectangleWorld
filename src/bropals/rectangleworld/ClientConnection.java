@@ -33,6 +33,7 @@ public class ClientConnection implements Runnable {
 			String input = null;
 			System.out.println("Server is waiting for client input...");
 			while ((input = in.readLine()) != null) {
+				System.out.println("LOOP : ClientConnection:36");
 				System.out.println("Got input: "+input);
 				handler.handleRequest(input, id);
 			}

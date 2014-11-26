@@ -43,12 +43,14 @@ public class RequestHandler {
 		synchronized (connections) {
 			Iterator iterator = connections.iterator();
 			while (iterator.hasNext()) {
+				System.out.println("LOOP : RequestHandler:46");
 				ClientConnection cc = (ClientConnection)iterator.next();
 				if (idOfSender == -1 || cc.getID() != idOfSender) {
 					cc.getOut().println(msg);
 				}
 			}
 		}
+		System.out.println("Broadcasted to " + connections.size() + " clients");
 	}
 	
 	public void addClient(ClientConnection client) {
@@ -61,6 +63,7 @@ public class RequestHandler {
 		synchronized (entities) {
 			Iterator i = entities.iterator();
 			while (i.hasNext()) {
+				System.out.println("LOOP : RequestHandler:64");
 				System.out.println("Sending information about " + i.toString());
 				GameEntity ent = (GameEntity)i.next();
 				if (ent instanceof PlayerEntity) {
@@ -86,6 +89,7 @@ public class RequestHandler {
 		synchronized (connections) {
 			Iterator i = connections.iterator();
 			while (i.hasNext()) {
+				System.out.println("LOOP : RequestHandler:90");
 				ClientConnection cc = (ClientConnection)i.next();
 				if (cc.getID() == idNum) {
 					connection = cc;

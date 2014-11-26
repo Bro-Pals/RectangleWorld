@@ -1,15 +1,12 @@
 package bropals.rectangleworld;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
-import java.util.Iterator;
 import bropals.rectangleworld.event.*;
 
 public class GameWorld {
 	
-	private List<GameEvent> eventQueue;
-	private List<GameEntity> entities;
+	private ArrayList<GameEvent> eventQueue;
+	private ArrayList<GameEntity> entities;
 	private static final int 
 		boundryLeft = 0, 
 		boundryRight = 1500, 
@@ -18,11 +15,11 @@ public class GameWorld {
 	;
 	
 	public GameWorld() {
-		eventQueue = Collections.synchronizedList(new ArrayList<GameEvent>());
-		entities = Collections.synchronizedList(new ArrayList<GameEntity>());
+		eventQueue = new ArrayList<GameEvent>();
+		entities = new ArrayList<GameEntity>();
 	}
 	
-	public List<GameEntity> getEntities() {
+	public ArrayList<GameEntity> getEntities() {
 		return entities;
 	}
 	
@@ -35,11 +32,8 @@ public class GameWorld {
 			Handle all received and self-generated game events on this frame; don't let new guys come in
 		*/
 		synchronized (eventQueue) {
-			GameEvent current;
-			Iterator iterator = eventQueue.iterator();
-			while(iterator.hasNext()) {
-				current = (GameEvent)iterator.next();
-				handleEvent(current);
+			for (int i=0; i<eventQueue.size(); i++) {
+				handleEvent(eventQueue.get(i));
 			}
 		}
 		eventQueue.clear();
@@ -100,12 +94,9 @@ public class GameWorld {
 	
 	public GameEntity getEntity(int id) {
 		synchronized (entities) {
-			GameEntity current;
-			Iterator iterator = entities.iterator();
-			while(iterator.hasNext()) {
-				current = (GameEntity)iterator.next();
-				if (current.getID() == id) {
-					return current;
+			for (int i=0; i<entities.size(); i++) {
+				if (entities.get(i).getID() == id) {
+					return entities.get(i);
 				}
 			}
 		}
