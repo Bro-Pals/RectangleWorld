@@ -21,7 +21,7 @@ public class RectangleWorldServer {
 		}
 		GameWorld world = new GameWorld(); // the server's copy of game world
 		initWorld(world);
-		RequestHandler requestHandler = new RequestHandler(server, world);
+		RequestHandler requestHandler = new RequestHandler(world);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
 		boolean running = true;
@@ -29,8 +29,10 @@ public class RectangleWorldServer {
 			try {
 				System.out.println("Waiting for another client at  " + server.getLocalSocketAddress().toString());
 				Socket nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);				
-				connection.startListening(new Thread(connection));
+				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
+				Thread t = new Thread(connection);
+				threads.add(t);
+				t.start();
 				requestHandler.addClient(connection);
 				System.out.println("Accepted connection from " + nextSocket.getInetAddress().toString() + 
 							"(now have " + requestHandler.getNumberOfClients() + " clients)");

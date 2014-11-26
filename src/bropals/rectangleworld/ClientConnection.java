@@ -15,12 +15,10 @@ public class ClientConnection implements Runnable {
 	private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
-	private Thread myThread;
 	private int id;
 	
 	public ClientConnection(Socket s, int idNum, RequestHandler handler) {
 		this.id = idNum;
-		this.myThread = null;
 		this.handler = handler;
 		try {
 			this.socket = s;
@@ -31,11 +29,6 @@ public class ClientConnection implements Runnable {
 		}
 	}
 	
-	public void startListening(Thread onThis) {
-		myThread = onThis;
-		myThread.start();
-	}
-	
 	@Override
 	public void run() {
 		System.out.println("I'm running!");
@@ -43,9 +36,7 @@ public class ClientConnection implements Runnable {
 		try {
 			System.out.println("Waiting for client input...");
 			while (!socket.isClosed() && (input = in.readLine()) != null) {
-				handler.handleRequest(
-				input, 
-				id);
+				handler.handleRequest(input, id);
 			}
 			
 		} catch(IOException e) {

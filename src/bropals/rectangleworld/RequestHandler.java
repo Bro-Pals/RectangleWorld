@@ -16,12 +16,10 @@ import java.net.Socket;
 public class RequestHandler {
 	
 	private List<ClientConnection> connections;
-	private ServerSocket server;
 	private GameWorld world;
 	
-	public RequestHandler(ServerSocket s, GameWorld w) {
+	public RequestHandler(GameWorld w) {
 		this.connections = Collections.synchronizedList(new ArrayList<ClientConnection>());
-		this.server = s;
 		this.world = w;
 	}
 	
