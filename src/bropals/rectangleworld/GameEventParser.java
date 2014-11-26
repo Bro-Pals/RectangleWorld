@@ -21,31 +21,34 @@ public class GameEventParser {
 		long timeStamp = Long.parseLong(paramList[0]);
 		int eventId = Integer.parseInt(paramList[1]);
 		int id;
+		Direction direction;
+		Color color;
+		float posX, posY, width, height;
 		switch(eventId) {
 			case START_MOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
+				direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
 				float vel = Float.parseFloat(paramList[4]);
-				return new StartMoveEvent(timeStamp, id, direction, amount);
+				return new StartMoveEvent(timeStamp, id, direction, vel);
 			case STOP_MOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
+				direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
 				float posDir = Integer.parseInt(paramList[4]);
 				return new StopMoveEvent(timeStamp, id, direction, posDir);
 			case ENTITY_ADD_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				float posX = Float.parseFloat(paramList[3]);
-				float posY = Float.parseFloat(paramList[4]);
-				Color color = getColorFromID(Integer.parseInt(paramList[5]));
-				float width = Float.parseFloat(paramList[6]);
-				float height = Float.parseFloat(paramList[7]);
+				posX = Float.parseFloat(paramList[3]);
+				posY = Float.parseFloat(paramList[4]);
+				color = getColorFromID(Integer.parseInt(paramList[5]));
+				width = Float.parseFloat(paramList[6]);
+				height = Float.parseFloat(paramList[7]);
 				return new EntityAddEvent(timeStamp, id, posX, posY, width, height, color);
 			case  ENTITY_REMOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
 				return new EntityRemoveEvent(timeStamp, id);
 			case COLOR_CHANGE_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				Color color = getColorFromID(Integer.parseInt(paramList[3]));
+				color = getColorFromID(Integer.parseInt(paramList[3]));
 				return new ColorChangeEvent(timeStamp, id, color);
 			case CHAT_EVENT:
 				id = Integer.parseInt(paramList[2]);
@@ -54,12 +57,12 @@ public class GameEventParser {
 				break;
 			case PLAYER_ADD_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				float posX = Float.parseFloat(paramList[3]);
-				float posY = Float.parseFloat(paramList[4]);
+				posX = Float.parseFloat(paramList[3]);
+				posY = Float.parseFloat(paramList[4]);
 				Color color = getColorFromID(Integer.parseInt(paramList[5]));
 				String name = paramList[6];
-				float width = Float.parseFloat(paramList[7]);
-				float height = Float.parseFloat(paramList[8]);
+				width = Float.parseFloat(paramList[7]);
+				height = Float.parseFloat(paramList[8]);
 				return new PlayerAddEvent(timeStamp, id, posX, posY, width, height, color, name);
 			case JOIN_EVENT:
 				id = Integer.parseInt(paramList[2]);
@@ -74,24 +77,25 @@ public class GameEventParser {
 			return "" + ce.getTimeStamp()  + SEPARATOR + CHAT_EVENT + SEPARATOR + ce.getID() + SEPARATOR + ce.getText();
 		} else if (e instanceof ColorChangeEvent) {
 			ColorChangeEvent cce = (ColorChangeEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + COLOR_CHANGE_EVENT + SEPARATOR + cce.getID() + SEPARATOR + getColorID(cce.getColor());
+			return "" + cce.getTimeStamp()  + SEPARATOR + COLOR_CHANGE_EVENT + SEPARATOR + cce.getID() + SEPARATOR + getColorID(cce.getColor());
 		} else if (e instanceof EntityAddEvent) {
 			EntityAddEvent eae = (EntityAddEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
+			return "" + eae.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
 		} else if (e instanceof EntityRemoveEvent) {
 			EntityRemoveEvent ere = (EntityRemoveEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + ENTITY_REMOVE_EVENT + SEPARATOR + ere.getID();
+			return "" + ere.getTimeStamp()  + SEPARATOR + ENTITY_REMOVE_EVENT + SEPARATOR + ere.getID();
 		} else if (e instanceof PlayerAddEvent) {
 			PlayerAddEvent eae = (PlayerAddEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName() + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
+			return "" + eae.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName() + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
 		} else if (e instanceof StartMoveEvent) {
 			StartMoveEvent sme = (StartMoveEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + START_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getVelocity();
+			return "" + sme.getTimeStamp()  + SEPARATOR + START_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getVelocity();
 		} else if (e instanceof StopMoveEvent) {
 			StopMoveEvent sme = (StopMoveEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getDirectionalPosition();
+			return "" + sme.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getDirectionalPosition();
 		} else if (e instanceof JoinEvent) {
-			return "" + ce.getTimeStamp() + SEPARATOR + JOIN_EVENT;
+			JoinEvent je = (JoinEvent)e;
+			return "" + je.getTimeStamp() + SEPARATOR + JOIN_EVENT;
 		}
 		return null;
 	}
