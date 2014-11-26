@@ -36,7 +36,7 @@ public class RectangleWorldClient {
  				} catch(UnknownHostException uhe) {
 					JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				dialog.dispose();
+				dialog.setVisible(false);
 				if (address!=null) {
 					/*
 						Continue creating the world. Error box popped up if the 
@@ -47,11 +47,16 @@ public class RectangleWorldClient {
 						client = new RectangleWorldClient(playerName, address);
 					} catch(IOException ioe) {
 						JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+						client = null;
 					}
 					if (client!=null) {
 						System.out.println("Successfully established a connection with the server at " + address.toString());
 						System.out.println();
+						dialog.dispose(); //Don't need the dialog anymore.
 						client.loop();
+					} else {
+						//Could not connect, open the dialog again
+						dialog.setVisible(true);
 					}
 				}
 			}
@@ -98,11 +103,7 @@ public class RectangleWorldClient {
 				Iterator iterator;
 				GameEntity next;
 				//First update all the entities
-				iterator = entities.iterator();
-				while (iterator.hasNext()) {
-					next = (GameEntity)iterator.next();
-					next.update();
-				}
+				world.update();
 				//Then draw all the entities
 				iterator = entities.iterator();
 				while (iterator.hasNext()) {

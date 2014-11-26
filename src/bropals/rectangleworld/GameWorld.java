@@ -38,7 +38,14 @@ public class GameWorld {
 		/*
 			Update this copy of the world, not allowing self generated events to come in
 		*/
-		
+		synchronized (entities) {
+			GameEntity current;
+			Iterator i = entities.iterator();
+			while(i.hasNext()) {
+				current = (GameEntity)i.next();
+				current.update();
+			}
+		}
 	}
 	
 	public void handleEvent(GameEvent event) {
