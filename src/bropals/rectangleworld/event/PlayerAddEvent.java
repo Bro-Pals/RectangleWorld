@@ -10,7 +10,8 @@ public class PlayerAddEvent extends GameEvent {
 	private float posX, posY;
 	private String name;
 	
-	public PlayerAddEvent(int id, float posX, float posY, Color color, String name) {
+	public PlayerAddEvent(long timeStamp, int id, float posX, float posY, Color color, String name) {
+		setTimeStamp(timeStamp);
 		this.id = id;
 		this.color = color;
 		this.posX = posX;

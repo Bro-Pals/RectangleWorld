@@ -8,7 +8,8 @@ public class ColorChangeEvent extends GameEvent {
 	private int id;
 	private Color color;
 	
-	public ColorChangeEvent(int id, Color color) {
+	public ColorChangeEvent(long timeStamp, int id, Color color) {
+		setTimeStamp(timeStamp);
 		this.id = id;
 		this.color = color;
 	}
