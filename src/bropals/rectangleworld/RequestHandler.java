@@ -46,7 +46,7 @@ public class RequestHandler {
 			Iterator iterator = clients.iterator();
 			while (iterator.hasNext()) {
 				ClientConnection cc = (ClientConnection)iterator.next();
-				if (idOfSender == -1 || cc.getId() != idOfSender) {
+				if (idOfSender == -1 || cc.getID() != idOfSender) {
 					cc.getOut().println(msg);
 				}
 			}
@@ -67,18 +67,18 @@ public class RequestHandler {
 			while (i.hasNext()) {
 				GameEntity ent = (GameEntity)i.next();
 				if (ent instanceof PlayerEntity) {
-					PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getId(), 
+					PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getID(), 
 						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
 						((PlayerEntity)ent).getName());
 					client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
 				} else {
-					GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getId(), 
+					GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getID(), 
 						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
 					client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
 				}
 			}
 		}
 		
-		client.getOut().println(GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getId())));
+		client.getOut().println(GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getID())));
 	}
 }

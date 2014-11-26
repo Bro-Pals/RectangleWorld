@@ -4,13 +4,12 @@ import bropals.rectangleworld.*;
 
 public class StopMoveEvent extends GameEvent {
 	
-	private int id;
 	private Direction direction;
 	private float posDir;
 	
 	public StopMoveEvent(long timeStamp, int id, Direction direction, float posDir) {
+		super(id);
 		setTimeStamp(timeStamp);
-		this.id = id;
 		this.posDir = posDir;
 		this.direction = direction;
 	}
@@ -23,7 +22,4 @@ public class StopMoveEvent extends GameEvent {
 		return direction;
 	}
 
-	public int getID() {
-		return id;
-	}
 }

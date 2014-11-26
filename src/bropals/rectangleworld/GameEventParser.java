@@ -94,7 +94,7 @@ public class GameEventParser {
 			return "" + sme.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getDirectionalPosition();
 		} else if (e instanceof IdAssignmentEvent) {
 			IdAssignmentEvent iae = (IdAssignmentEvent)e;
-			return "" + iae.getTimeStamp() + SEPARATOR + ID_ASSIGNMENT_EVENT + SEPARATOR + iae.getId();
+			return "" + iae.getTimeStamp() + SEPARATOR + ID_ASSIGNMENT_EVENT + SEPARATOR + iae.getID();
 		}
 		return null;
 	}

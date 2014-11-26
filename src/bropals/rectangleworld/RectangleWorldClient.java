@@ -66,6 +66,7 @@ public class RectangleWorldClient {
 	private PrintWriter output;
 	private static GameWorld world;
 	private float cameraX, cameraY;
+	private int idOfPlayer;
 	
 	public RectangleWorldClient(String playerName, InetAddress address) throws IOException {
 		this.playerName = playerName;
@@ -74,6 +75,7 @@ public class RectangleWorldClient {
 		output = new PrintWriter(socket.getOutputStream());
 		cameraX = 0;
 		cameraY = 0;
+		idOfPlayer = -1; // -1 is when it's not assigned yet
 	}
 	
 	public void loop() {
@@ -116,6 +118,10 @@ public class RectangleWorldClient {
 				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
 			}
 		}
+	}
+	
+	public void setClientPlayerId(int id) {
+		this.idOfPlayer = id;
 	}
 	
 	public void setCameraPosition(float x, float y) {

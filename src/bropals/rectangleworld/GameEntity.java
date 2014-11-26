@@ -37,7 +37,7 @@ public class GameEntity {
 	public void setHeight(float height) { this.h=height; }
 	public void setXVelocity(float xVel) { this.xV=xVel; }
 	public void setYVelocity(float yVel) { this.yV=yVel; }
-	public void setId(int id) { this.id=id; }
+	public void getID(int id) { this.id=id; }
 	
 	public GameWorld getGameWorld() { return world; }
 	public Color getColor() { return color; }
@@ -47,6 +47,6 @@ public class GameEntity {
 	public float getHeight() { return h; }
 	public float getXVelocity() { return xV; }
 	public float getYVelocity() { return yV; }
-	public int getId() { return id; }
+	public int getID() { return id; }
 	
 }

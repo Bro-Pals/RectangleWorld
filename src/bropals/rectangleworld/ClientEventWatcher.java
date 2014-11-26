@@ -13,10 +13,12 @@ public class ClientEventWatcher implements Runnable {
 	private BufferedReader in; // the reader it's listening for events from
 	private GameWorld world; // the world it's sending events to
 	private PrintWriter out;
+	private RectangleWorldClient daMainClass; // so it can tell it to set it's special player
 	
-	public ClientEventWatcher(GameWorld world, BufferedReader in, PrintWriter out) {
+	public ClientEventWatcher(GameWorld world, BufferedReader in, PrintWriter out, RectangleWorldClient rwc) {
 		this.in=in;
 		this.out=out;
+		this.daMainClass = rwc;
 	}
 	
 	@Override
@@ -27,7 +29,9 @@ public class ClientEventWatcher implements Runnable {
 				GameEvent event = GameEventParser.parseMessage(input);
 				if (event != null) {
 					if (event instanceof IdAssignmentEvent) {
-						
+						daMainClass.setClientPlayerId(((IdAssignmentEvent)event).getID()); // we now have a player!
+					} else {
+						world.addEvent(event); // the world will handle other events
 					}
 				}
 			}
