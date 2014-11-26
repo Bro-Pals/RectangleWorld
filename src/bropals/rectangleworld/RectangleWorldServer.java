@@ -20,6 +20,7 @@ public class RectangleWorldServer {
 			return;
 		}
 		GameWorld world = new GameWorld(); // the server's copy of game world
+		initWorld(world);
 		RequestHandler requestHandler = new RequestHandler(server, world);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
@@ -48,5 +49,9 @@ public class RectangleWorldServer {
 	public static int getNewId() {
 		lastId++;
 		return lastId;
+	}
+	
+	public static void initWorld(GameWorld world) {
+		//Initial entity placement
 	}
 }
