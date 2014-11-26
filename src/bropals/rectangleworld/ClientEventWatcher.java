@@ -24,7 +24,7 @@ public class ClientEventWatcher implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String input;
+			String input = null;
 			System.out.println("Waiting for server input...");
 			while((input = in.readLine()) != null) {
 				System.out.println("Input: " + input);
@@ -39,8 +39,10 @@ public class ClientEventWatcher implements Runnable {
 					}
 				}
 			}
+			System.out.println("Stopped recieving input from server, it probably closed out.");
 		} catch(Exception e) {
 			System.out.println("Error in ClientEventWatcher: " + e.toString());
+			e.printStackTrace();
 		}
 	}
 }

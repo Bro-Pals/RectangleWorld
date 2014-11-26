@@ -102,7 +102,9 @@ public class RectangleWorldClient {
 		final long mpf = 20; //Milliseconds per frame
 		
 		/*
-			The loop in question
+			The loop in question.
+			This is an infinite loop at the client side of the client/server pair.
+			
 		*/
 		while (window.exists()) {
 			before = System.currentTimeMillis();
