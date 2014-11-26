@@ -74,6 +74,6 @@ public class ClientConnectDialog extends JFrame {
 				break;
 			}
 		}
-		return valid;
+		return valid && array.length <= 25;
 	}
 }

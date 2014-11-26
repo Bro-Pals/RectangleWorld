@@ -17,6 +17,8 @@ import java.util.Iterator;
 import horsentp.simpledrawing.DrawWindow;
 import bropals.rectangleworld.event.*;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class RectangleWorldClient {
 
@@ -65,7 +67,7 @@ public class RectangleWorldClient {
 					}
 				} else {
 					//Invalid input, tell them the error
-					JOptionPane.showMessageDialog(dialog, "Invalid name: name may not contain \"" + GameEventParser.SEPARATOR + "\"", "Invalid name", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(dialog, "Invalid name: name must be 25 characters or less and it must not contain \"" + GameEventParser.SEPARATOR + "\"", "Sorry! Invalid name", JOptionPane.ERROR_MESSAGE);
 					dialog.setVisible(true);
 				}
 			}
@@ -94,6 +96,13 @@ public class RectangleWorldClient {
 	
 	public void loop() {
 		DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
+		/* Have something happen if the user wants to close the window */
+		window.getRawFrame().addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent weeeeee) {
+				onWindowCloseRequest();
+			}	
+		});
 		Graphics g = window.getDrawGraphics();
 		g.drawString("Waiting for world..", 100, 100);
 		window.showBuffer(g);
@@ -153,6 +162,10 @@ public class RectangleWorldClient {
 				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
 			}
 		}
+	}
+	
+	public void onWindowCloseRequest() {
+		//Need to close connection here
 	}
 	
 	public void makePlayerWithId(int id) {

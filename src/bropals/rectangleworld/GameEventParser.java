@@ -2,6 +2,7 @@ package bropals.rectangleworld;
 
 import bropals.rectangleworld.event.*;
 import java.awt.Color;
+import java.util.regex.Pattern;
 
 public class GameEventParser {
 
@@ -17,7 +18,7 @@ public class GameEventParser {
 	public static final char SEPARATOR = '$';
 
 	public static GameEvent parseMessage(String msg) {
-		String[] paramList = msg.split("" + SEPARATOR);
+		String[] paramList = msg.split(Pattern.quote("" + SEPARATOR + ""));
 		long timeStamp = Long.parseLong(paramList[0]);
 		int eventId = Integer.parseInt(paramList[1]);
 		int id;
