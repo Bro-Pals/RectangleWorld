@@ -71,9 +71,7 @@ public class RectangleWorldClient {
 					dialog.setVisible(true);
 				}
 			}
-		});
-		
-		
+		});		
 	}
 	
 	private String playerName;
