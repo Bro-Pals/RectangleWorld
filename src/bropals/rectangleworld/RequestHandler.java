@@ -1,4 +1,5 @@
 package bropals.rectangleworld;
+package bropals.rectangleworld.event.*;
 
 import java.util.ArrayList;
 import java.net.ServerSocket;
@@ -27,7 +28,7 @@ public class RequestHandler {
 	public void handleRequest(String msg, int id) {
 		GameEvent event = parser.parseMessage(msg);
 		// do whatever the message said to do
-		
+
 		// tell the clients to do the same thing
 		broadcastToClients(msg, id);
 	}
@@ -48,5 +49,12 @@ public class RequestHandler {
 		clients.add(client);
 		
 		// send a copy of the world?
+		ArrayList<GameEntity> entities = world.getEntities();
+		for (int i=0; i<entities.size(); i++) {
+			if (entities.get(i) instanceof PlayerEntity) {
+				
+			}
+		}
+		
 	}
 }
