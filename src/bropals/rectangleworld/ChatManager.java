@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Collections;
 import java.awt.Graphics;
 
+import java.util.ArrayList;
+
 /**
 	A chat box that can hold the last few lines of line it got.
 */
@@ -20,7 +22,7 @@ public class ChatManager {
 	public ChatManager(int lines, int characterLimit) {
 		chatting = false;
 		maxLines = lines;
-		names = Collections.synchronizedList(new ArrayList<String[]>());
+		messages = Collections.synchronizedList(new ArrayList<String[]>());
 		currentLine = new char[characterLimit];
 		onChar = 0;
 	}

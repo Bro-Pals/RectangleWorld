@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import horsentp.simpledrawing.DrawWindow;
+import bropals.rectangleworld.event.*;
+import java.awt.Color;
 
 public class RectangleWorldClient {
 
@@ -90,7 +92,10 @@ public class RectangleWorldClient {
 		window.showBuffer(g);
 		world = new GameWorld();
 		
-		// make a ServerConnection to handle request
+		ClientEventWatcher eventWatcher = new ClientEventWatcher(world, input, output, this);
+		Thread eventWatcherThread = new Thread(eventWatcher);
+		eventWatcherThread.run(); // start listening for events
+		
 		long before, delta;
 		final long mpf = 20; //Milliseconds per frame
 		
