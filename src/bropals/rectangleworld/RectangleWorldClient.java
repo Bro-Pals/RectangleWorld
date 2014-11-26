@@ -65,12 +65,15 @@ public class RectangleWorldClient {
 	private BufferedReader input;
 	private PrintWriter output;
 	private static GameWorld world;
+	private float cameraX, cameraY;
 	
 	public RectangleWorldClient(String playerName, InetAddress address) throws IOException {
 		this.playerName = playerName;
 		socket = new Socket(address, SERVER_PORT);
 		input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		output = new PrintWriter(socket.getOutputStream());
+		cameraX = 0;
+		cameraY = 0;
 	}
 	
 	public void loop() {
@@ -115,10 +118,20 @@ public class RectangleWorldClient {
 		}
 	}
 	
+	public void setCameraPosition(float x, float y) {
+		cameraX = x;
+		cameraY = y;
+	}
+	
+	public void translateCamera(float x, float y) {
+		cameraX += x;
+		cameraY += y;
+	}
+	
 	public void drawGameEntity(Graphics g, GameEntity ge) {
 		g.setColor(ge.getColor());
-		g.fillRect((int)ge.getX(),
-			(int)ge.getY(),
+		g.fillRect((int)(ge.getX()-cameraX),
+			(int)(ge.getY()-cameraY),
 			(int)ge.getWidth(),
 			(int)ge.getHeight()
 		);
