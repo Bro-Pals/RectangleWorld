@@ -47,7 +47,8 @@ public class RequestHandler {
 	public void addClient(ClientConnection client) {
 		clients.add(client);
 		
-		
+		// send the client a JoinEvent, telling it what it's Player's id number should be
+		client.getOut().println(GameEventParser.translateEvent(new JointEvent(System.currentTimeMillis(), client.getId())));
 		
 		// send a copy of the world?
 		ArrayList<GameEntity> entities = world.getEntities();
