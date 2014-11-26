@@ -40,7 +40,7 @@ public class ClientConnectDialog extends JFrame {
 		add(new JLabel("IP Address"));
 		add(ip);
 		add(go);
-		setSize(300, 200);
+		setSize(350, 180);
 		setVisible(true);
 		setLocationRelativeTo(null);
 		setResizable(false);
