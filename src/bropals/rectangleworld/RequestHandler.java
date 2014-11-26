@@ -51,8 +51,16 @@ public class RequestHandler {
 		// send a copy of the world?
 		ArrayList<GameEntity> entities = world.getEntities();
 		for (int i=0; i<entities.size(); i++) {
-			if (entities.get(i) instanceof PlayerEntity) {
-				
+			GameEntity ent = entities.get(i);
+			if (ent instanceof PlayerEntity) {
+				PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getId(), 
+					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
+					((PlayerEntity)ent).getName());
+				client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
+			} else {
+				GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getId(), 
+					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
+				client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
 			}
 		}
 		
