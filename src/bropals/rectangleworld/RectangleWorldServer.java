@@ -25,10 +25,11 @@ public class RectangleWorldServer {
 		ArrayList<Thread> threads = new ArrayList<>();
 		
 		boolean running = true;
+		Socket nextSocket;
 		while (running) {
 			try {
-				System.out.println("Waiting for another client at  " + server.getLocalSocketAddress().toString());
-				Socket nextSocket = server.accept();
+				System.out.println("Waiting for another client");
+				nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
 				Thread t = new Thread(connection);
 				threads.add(t);

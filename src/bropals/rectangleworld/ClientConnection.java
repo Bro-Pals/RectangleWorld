@@ -17,25 +17,21 @@ public class ClientConnection implements Runnable {
 	private BufferedReader in;
 	private int id;
 	
-	public ClientConnection(Socket s, int idNum, RequestHandler handler) {
+	public ClientConnection(Socket s, int idNum, RequestHandler handler) throws IOException {
 		this.id = idNum;
 		this.handler = handler;
-		try {
-			this.socket = s;
-			out = new PrintWriter(s.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch(Exception e) {
-			System.out.println("Error construction a ClientConnection object: " + e.toString());
-		}
+		this.socket = s;
+		out = new PrintWriter(s.getOutputStream(), true);
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("I'm running!");
-		String input = null;
 		try {
-			System.out.println("Waiting for client input...");
-			while (!socket.isClosed() && (input = in.readLine()) != null) {
+			String input = null;
+			System.out.println("Server is waiting for client input...");
+			while ((input = in.readLine()) != null) {
+				System.out.println("Got input: "+input);
 				handler.handleRequest(input, id);
 			}
 			
