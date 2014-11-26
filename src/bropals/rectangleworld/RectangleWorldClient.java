@@ -22,10 +22,10 @@ public class RectangleWorldClient {
 				try {
 					address = dialog.getIPAddress();
  				} catch(UnknownHostException uhe) {
-					JOptionPane.showMessageDialog(dialog, "Unable to connect to server: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(dialog, "Error: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				dialog.dispose();
 				if (address!=null) {
-					dialog.dispose();
 					/*
 						Continue creating the world. Error box popped up if the 
 						address location is unknown (UnknownHostException)
