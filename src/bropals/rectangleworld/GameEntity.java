@@ -46,5 +46,6 @@ public class GameEntity {
 	public float getHeight() { return h; }
 	public float getXVelocity() { return xV; }
 	public float getYVelocity() { return yV; }
+	public int getId() { return id; }
 	
 }

@@ -20,12 +20,11 @@ public class RequestHandler {
 		this.clients = new ArrayList<>();
 		this.server = s;
 		this.world = w;
-		parser = new GameEventParser();
 	}
 	
 	
 	public void handleRequest(String msg, int id) {
-		GameEvent event = parser.parseMessage(msg);
+		GameEvent event = GameEventParser.parseMessage(msg);
 		
 		
 		
@@ -62,7 +61,7 @@ public class RequestHandler {
 			} else {
 				GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getId(), 
 					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
-				client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
+				client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
 			}
 		}
 		
