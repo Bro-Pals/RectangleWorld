@@ -20,7 +20,7 @@ public class RectangleWorldServer {
 		while (running) {
 			try {
 				Socket nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, nextId, requestHandler)
+				ClientConnection connection = new ClientConnection(nextSocket, nextId, requestHandler);
 				requestHandler.addClient(connection);
 				Thread newThread = new Thread(connection);
 				newThread.run();
