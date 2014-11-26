@@ -1,2 +1,2 @@
 Main-Class: bropals.rectangleworld.RectangleWorldServer
-Class-Path: lib
+Class-Path: lib/SimpleDrawing.jar

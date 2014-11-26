@@ -1,9 +1,9 @@
-package horsentp.rectangleworld;
+package bropals.rectangleworld;
 
 public enum Direction {
 	NORTH_SOUTH, EAST_WEST;
 	
-	public static Direction getById(int id) {
+	public static Direction getByID(int id) {
 		if (id == 0) {
 			return NORTH_SOUTH;
 		} else {
@@ -11,7 +11,7 @@ public enum Direction {
 		}
 	}
 	
-	public static int getDirectionId(Direction d) {
+	public static int getDirectionID(Direction d) {
 		if (d == Direction.NORTH_SOUTH) {
 			return 0;
 		} else {

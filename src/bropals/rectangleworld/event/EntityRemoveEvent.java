@@ -7,7 +7,7 @@ public class EntityRemoveEvent extends GameEvent {
 	
 	private int id;
 	
-	public EntityAddEvent(int id) {
+	public EntityRemoveEvent(int id) {
 		this.id = id;
 	}
 	
