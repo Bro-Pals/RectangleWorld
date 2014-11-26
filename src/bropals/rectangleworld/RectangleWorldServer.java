@@ -28,8 +28,8 @@ public class RectangleWorldServer {
 		while (running) {
 			try {
 				Socket nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, nextId, requestHandler);
-				nextId++; // so the next Id is gonna be unique
+				ClientConnection connection = new ClientConnection(nextSocket, lastId, requestHandler);
+				lastId++; // so the next Id is gonna be unique
 				requestHandler.addClient(connection);
 				Thread newThread = new Thread(connection);
 				newThread.run();

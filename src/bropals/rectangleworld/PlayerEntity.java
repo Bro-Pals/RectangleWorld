@@ -1,5 +1,7 @@
 package bropals.rectangleworld;
 
+import java.awt.Color;
+
 /**
 	Just like the GameEntity only has a name too
 */

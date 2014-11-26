@@ -21,11 +21,11 @@ public class PlayerAddEvent extends GameEvent {
 		this.name = name;
 	}
 	
-	public void getWidth() {
+	public float getWidth() {
 		return width;
 	}
 	
-	public void getHeight() {
+	public float getHeight() {
 		return height;
 	}
 	
