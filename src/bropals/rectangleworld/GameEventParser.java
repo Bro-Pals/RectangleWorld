@@ -17,35 +17,53 @@ public class GameEventParser {
 	private static final String SEPARATOR = " ";
 
 	public static GameEvent parseMessage(String msg) {
-		String paramList = msg.split(SEPARATOR);
+		String[] paramList = msg.split(SEPARATOR);
 		long timeStamp = Long.parseLong(paramList[0]);
 		int eventId = Integer.parseInt(paramList[1]);
+		int id;
 		switch(eventId) {
 			case START_MOVE_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
-				break;
+				float vel = Float.parseFloat(paramList[4]);
+				return new StartMoveEvent(timeStamp, id, direction, amount);
 			case STOP_MOVE_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
+				float posDir = Integer.parseInt(paramList[4]);
+				return new StopMoveEvent(timeStamp, id, direction, posDir);
 			case ENTITY_ADD_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				float posX = Float.parseFloat(paramList[3]);
+				float posY = Float.parseFloat(paramList[4]);
+				Color color = getColorFromID(Integer.parseInt(paramList[5]));
+				float width = Float.parseFloat(paramList[6]);
+				float height = Float.parseFloat(paramList[7]);
+				return new EntityAddEvent(timeStamp, id, posX, posY, width, height, color);
 			case  ENTITY_REMOVE_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				return new EntityRemoveEvent(timeStamp, id);
 			case COLOR_CHANGE_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				Color color = getColorFromID(Integer.parseInt(paramList[3]));
+				return new ColorChangeEvent(timeStamp, id, color);
 			case CHAT_EVENT:
-				
-				break;
-			case JOIN_EVENT:
-				
+				id = Integer.parseInt(paramList[2]);
+				String text = paramList[3];
+				return new ChatEvent(timeStamp, id, text);
 				break;
 			case PLAYER_ADD_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				float posX = Float.parseFloat(paramList[3]);
+				float posY = Float.parseFloat(paramList[4]);
+				Color color = getColorFromID(Integer.parseInt(paramList[5]));
+				String name = paramList[6];
+				float width = Float.parseFloat(paramList[7]);
+				float height = Float.parseFloat(paramList[8]);
+				return new PlayerAddEvent(timeStamp, id, posX, posY, width, height, color, name);
+			case JOIN_EVENT:
+				id = Integer.parseInt(paramList[2]);
+				return new JoinEvent(timeStamp, id);
 		}
 		return null;
 	}
@@ -63,8 +81,6 @@ public class GameEventParser {
 		} else if (e instanceof EntityRemoveEvent) {
 			EntityRemoveEvent ere = (EntityRemoveEvent)e;
 			return "" + ce.getTimeStamp()  + SEPARATOR + ENTITY_REMOVE_EVENT + SEPARATOR + ere.getID();
-		} else if (e instanceof JoinEvent) {
-			return "" + ce.getTimeStamp()  + SEPARATOR + JOIN_EVENT;
 		} else if (e instanceof PlayerAddEvent) {
 			PlayerAddEvent eae = (PlayerAddEvent)e;
 			return "" + ce.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName() + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
@@ -73,7 +89,9 @@ public class GameEventParser {
 			return "" + ce.getTimeStamp()  + SEPARATOR + START_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getVelocity();
 		} else if (e instanceof StopMoveEvent) {
 			StopMoveEvent sme = (StopMoveEvent)e;
-			return "" + ce.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID();
+			return "" + ce.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getDirectionalPosition();
+		} else if (e instanceof JoinEvent) {
+			return "" + ce.getTimeStamp() + SEPARATOR + JOIN_EVENT;
 		}
 		return null;
 	}
