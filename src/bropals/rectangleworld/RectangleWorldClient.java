@@ -29,50 +29,55 @@ public class RectangleWorldClient {
 		dialog.addGoButtonActionListener(new ActionListener() { 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dialog.setVisible(false);
-				if (dialog.validInputs()) {
-					/*
-						When the go button is pressed, connect the client to the server
-						with the information provided.
-					*/
-					String playerName = dialog.getName();
-					
-					InetAddress address = null;
-					try {
-						address = dialog.getIPAddress();
-					} catch(UnknownHostException uhe) {
-						JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-					}
-					if (address!=null) {
-						/*
-							Continue creating the world. Error box popped up if the 
-							address location is unknown (UnknownHostException)
-						*/
-						RectangleWorldClient client = null;
-						try {
-							Socket socket = new Socket(address, SERVER_PORT);
-							client = new RectangleWorldClient(playerName, socket);
-						} catch(IOException ioe) {
-							JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-							client = null;
-						}
-						if (client!=null) {
-							System.out.println("Successfully established a connection with the server at " + address.toString());
-							System.out.println();
-							dialog.dispose(); //Don't need the dialog anymore.
-							client.loop();
-						} else {
-							//Could not connect, open the dialog again
-							dialog.setVisible(true);
-						}
-					}
+				initClient(dialog);
+			}
+		});		
+	}
+	
+	public static void initClient(final ClientConnectDialog dialog) {
+		dialog.setVisible(false);
+		if (dialog.validInputs()) {
+			/*
+				When the go button is pressed, connect the client to the server
+				with the information provided.
+			*/
+			String playerName = dialog.getName();
+			
+			InetAddress address = null;
+			try {
+				address = dialog.getIPAddress();
+			} catch(UnknownHostException uhe) {
+				JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (address!=null) {
+				/*
+					Continue creating the world. Error box popped up if the 
+					address location is unknown (UnknownHostException)
+				*/
+				RectangleWorldClient client = null;
+				try {
+					Socket socket = new Socket(address, SERVER_PORT);
+					client = new RectangleWorldClient(playerName, socket);
+				} catch(IOException ioe) {
+					JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+					client = null;
+				}
+				if (client!=null) {
+					System.out.println("Successfully established a connection with the server at " + address.toString());
+					System.out.println();
+					dialog.dispose(); //Don't need the dialog anymore.
+					client.loop();
+					client.onWindowCloseRequest();
 				} else {
-					//Invalid input, tell them the error
-					JOptionPane.showMessageDialog(dialog, "Invalid name: name must be 25 characters or less and it must not contain \"" + GameEventParser.SEPARATOR + "\"", "Sorry! Invalid name", JOptionPane.ERROR_MESSAGE);
+					//Could not connect, open the dialog again
 					dialog.setVisible(true);
 				}
 			}
-		});		
+		} else {
+			//Invalid input, tell them the error
+			JOptionPane.showMessageDialog(dialog, "Invalid name: name must be 25 characters or less and it must not contain \"" + GameEventParser.SEPARATOR + "\"", "Sorry! Invalid name", JOptionPane.ERROR_MESSAGE);
+			dialog.setVisible(true);
+		}
 	}
 	
 	private String playerName;
@@ -156,7 +161,7 @@ public class RectangleWorldClient {
 				}
 			}
 			window.showBuffer(g);
-			delta = System.currentTimeMillis();
+			delta = System.currentTimeMillis()-before;
 			if (delta < mpf) {
 				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
 			}
@@ -165,14 +170,23 @@ public class RectangleWorldClient {
 	
 	public void onWindowCloseRequest() {
 		//Need to close connection here
+		System.out.println("Quitting");
 		try {
+			System.out.println("Closing client I/O streams...");
 			input.close();
 			output.close();
-			socket.close();
-			window.destroy();
-		} catch(Exception e) {
-			System.out.println("Exception while closing the window : " + e.toString());
+			System.out.println("Closed the client I/O streams");
+		} catch(IOException e) {
+			System.out.println("Exception while closing the client I/O streams: " + e.toString());
 		}
+		try {
+			System.out.println("Closing client socket...");
+			socket.close();
+			System.out.println("Closed the client socket");
+		} catch(Exception e2) {
+			System.out.println("Exception while closing the client socket : " + e2.toString());
+		}
+		window.destroy();
 	}
 	
 	public void makePlayerWithId(int id) {
