@@ -56,10 +56,6 @@ public class RequestHandler {
 	public void addClient(ClientConnection client) {
 		clients.add(client);
 		
-		String playerAddMsg = "";
-		broadcastToClients(playerAddMsg, -1);
-		world.addEvent(GameEventParser.parseMessage(playerAddMsg)); // server adds the player
-		
 		// send a copy of the world?
 		List<GameEntity> entities = world.getEntities();
 		synchronized (entities) {

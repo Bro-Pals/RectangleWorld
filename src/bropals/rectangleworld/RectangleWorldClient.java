@@ -80,7 +80,7 @@ public class RectangleWorldClient {
 		output = new PrintWriter(socket.getOutputStream());
 		cameraX = 0;
 		cameraY = 0;
-		idOfPlayer = -1; // -1 is when it's not assigned yet
+		idOfPlayer = -1; // -1 is when it's not set yet
 	}
 	
 	public void loop() {
@@ -121,8 +121,14 @@ public class RectangleWorldClient {
 		}
 	}
 	
-	public void setClientPlayerId(int id) {
-		this.idOfPlayer = id;
+	public void makePlayerWithId(int id) {
+		if (idOfPlayer == -1) { // if the player id is NOT set yet
+			idOfPlayer = id;
+			PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), idOfPlayer, 
+				150, 150, 50, 50, Color.RED, playerName);
+			world.addEvent(pae);
+			output.println(GameEventParser.translateEvent(pae)); // send it over to the server
+		}
 	}
 	
 	public void setCameraPosition(float x, float y) {
