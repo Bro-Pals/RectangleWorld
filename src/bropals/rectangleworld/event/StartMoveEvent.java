@@ -6,9 +6,9 @@ public class StartMoveEvent extends GameEvent {
 	
 	private int id;
 	private Direction direction;
-	private int velocity;
+	private float velocity;
 	
-	public StartMoveEvent(long timeStamp, int id, Direction direction, int velocity) {
+	public StartMoveEvent(long timeStamp, int id, Direction direction, float velocity) {
 		setTimeStamp(timeStamp);
 		this.id = id;
 		this.direction = direction;
@@ -19,7 +19,7 @@ public class StartMoveEvent extends GameEvent {
 		return direction;
 	}
 	
-	public int getVelocity() {
+	public float getVelocity() {
 		return velocity;
 	}
 	
