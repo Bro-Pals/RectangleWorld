@@ -49,7 +49,7 @@ public class ClientConnection implements Runnable {
 		return in;
 	}
 	
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 }

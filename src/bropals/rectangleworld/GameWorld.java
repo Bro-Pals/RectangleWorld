@@ -51,4 +51,19 @@ public class GameWorld {
 	public void handleEvent(GameEvent event) {
 		
 	}
+	
+	public GameEntity getEntity(int id) {
+		synchronized (entities) {
+			GameEntity current;
+			Iterator iterator = entities.iterator();
+			while(iterator.hasNext()) {
+				current = (GameEntity)iterator.next();
+				if (current.getID() == id) {
+					return current;
+				}
+			}
+		}
+		System.out.println("Could not find Entity with id " + id);
+		return null;
+	}
 }

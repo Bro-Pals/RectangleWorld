@@ -5,12 +5,11 @@ import java.awt.Color;
 
 public class ColorChangeEvent extends GameEvent {
 	
-	private int id;
 	private Color color;
 	
 	public ColorChangeEvent(long timeStamp, int id, Color color) {
+		super(id);
 		setTimeStamp(timeStamp);
-		this.id = id;
 		this.color = color;
 	}
 	
@@ -18,7 +17,4 @@ public class ColorChangeEvent extends GameEvent {
 		return color;
 	}
 
-	public int getID() {
-		return id;
-	}
 }

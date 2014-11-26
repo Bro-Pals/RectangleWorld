@@ -5,12 +5,11 @@ import java.awt.Color;
 
 public class ChatEvent extends GameEvent {
 	
-	private int id;
 	private String text;
 	
 	public ChatEvent(long timeStamp, int id, String text) {
+		super(id);
 		setTimeStamp(timeStamp);
-		this.id = id;
 		this.text = text;
 	}
 	
@@ -18,7 +17,4 @@ public class ChatEvent extends GameEvent {
 		return text;
 	}
 
-	public int getID() {
-		return id;
-	}
 }

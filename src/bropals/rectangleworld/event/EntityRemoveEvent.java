@@ -5,14 +5,9 @@ import java.awt.Color;
 
 public class EntityRemoveEvent extends GameEvent {
 	
-	private int id;
-	
 	public EntityRemoveEvent(long timeStamp, int id) {
+		super(id);
 		setTimeStamp(timeStamp);
-		this.id = id;
 	}
-	
-	public int getID() {
-		return id;
-	}
+
 }

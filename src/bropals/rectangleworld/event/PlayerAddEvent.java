@@ -5,14 +5,13 @@ import java.awt.Color;
 
 public class PlayerAddEvent extends GameEvent {
 	
-	private int id;
 	private Color color;
 	private float posX, posY, width, height;
 	private String name;
 	
 	public PlayerAddEvent(long timeStamp, int id, float posX, float posY, float width, float height, Color color, String name) {
+		super(id);
 		setTimeStamp(timeStamp);
-		this.id = id;
 		this.color = color;
 		this.posX = posX;
 		this.posY = posY;
@@ -39,10 +38,6 @@ public class PlayerAddEvent extends GameEvent {
 	
 	public float getPositionY() {
 		return posY;
-	}
-
-	public int getID() {
-		return id;
 	}
 	
 	public String getName() {
