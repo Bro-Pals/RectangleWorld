@@ -50,7 +50,8 @@ public class RectangleWorldClient {
 						*/
 						RectangleWorldClient client = null;
 						try {
-							client = new RectangleWorldClient(playerName, address);
+							Socket socket = new Socket(address, SERVER_PORT);
+							client = new RectangleWorldClient(playerName, socket);
 						} catch(IOException ioe) {
 							JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 							client = null;
@@ -83,10 +84,11 @@ public class RectangleWorldClient {
 	private static GameWorld world;
 	private float cameraX, cameraY;
 	private int idOfPlayer;
+	private DrawWindow window;
 	
-	public RectangleWorldClient(String playerName, InetAddress address) throws IOException {
+	public RectangleWorldClient(String playerName, Socket socket) throws IOException {
 		this.playerName = playerName;
-		socket = new Socket(address, SERVER_PORT);
+		this.socket = socket;
 		input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		output = new PrintWriter(socket.getOutputStream(), true);
 		cameraX = 0;
@@ -95,7 +97,7 @@ public class RectangleWorldClient {
 	}
 	
 	public void loop() {
-		DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
+		window = new DrawWindow("RectangleWorld", 800, 600, false);
 		/* Have something happen if the user wants to close the window */
 		window.getRawFrame().addWindowListener(new WindowAdapter() {
 			@Override
@@ -166,6 +168,14 @@ public class RectangleWorldClient {
 	
 	public void onWindowCloseRequest() {
 		//Need to close connection here
+		try {
+			input.close();
+			output.close();
+			socket.close();
+			window.destroy();
+		} catch(Exception e) {
+			System.out.println("Exception while closing the window : " + e.toString());
+		}
 	}
 	
 	public void makePlayerWithId(int id) {
