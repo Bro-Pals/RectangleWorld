@@ -26,7 +26,6 @@ public class RectangleWorldServer {
 		GameWorld world = new GameWorld(); // the server's copy of game world
 		initWorld(world);
 		RequestHandler requestHandler = new RequestHandler(world);
-		ArrayList<Thread> threads = new ArrayList<>();
 		
 		Socket nextSocket;
 		while (serverDialog.isRunning()) {
@@ -34,12 +33,10 @@ public class RectangleWorldServer {
 				serverDialog.print("Waiting for another client");
 				nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
-				Thread t = new Thread(connection);
-				threads.add(t);
-				t.start();
+				connection.startThread();
 				requestHandler.addClient(connection);
 				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 
-							"(now have " + requestHandler.getNumberOfClients() + " clients)");
+					"(now have " + requestHandler.getNumberOfClients() + " clients)");
 			} catch(SocketException socketException) {
 				System.out.println("Server got shutdown: " + socketException.toString());
 				/* Need to shutdown all clients here */
