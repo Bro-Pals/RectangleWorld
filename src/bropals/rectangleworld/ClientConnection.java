@@ -15,10 +15,12 @@ public class ClientConnection implements Runnable {
 	private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
+	private Thread myThread;
 	private int id;
 	
 	public ClientConnection(Socket s, int idNum, RequestHandler handler) {
 		this.id = idNum;
+		this.myThread = new Thread(this);
 		try {
 			this.socket = s;
 			out = new PrintWriter(s.getOutputStream());
@@ -28,6 +30,10 @@ public class ClientConnection implements Runnable {
 		}
 	}
 	
+	public void startListening() {
+		myThread.run();
+	}
+	
 	@Override
 	public void run() {
 		String input;
@@ -35,9 +41,20 @@ public class ClientConnection implements Runnable {
 			while (!socket.isClosed() && (input = in.readLine()) != null) {
 				handler.handleRequest(input, id);
 			}
+			
 		} catch(IOException e) {
 			System.out.println("IO Error: " + e.toString());
 			//Need to have the server disconnect this connection
+		}
+	}
+	
+	public void stopSelf() {
+		try {
+			out.close();
+			in.close();
+			socket.close();
+		} catch (Exception e) {
+			System.out.println("Exception while client was stopping itself: " + e.toString());
 		}
 	}
 	

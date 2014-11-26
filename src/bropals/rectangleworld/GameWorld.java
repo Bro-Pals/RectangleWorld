@@ -49,7 +49,8 @@ public class GameWorld {
 	}
 	
 	public void handleEvent(GameEvent event) {
-		
+		System.out.println("Handling an event! \n msg: " + GameEventParser.translateEvent(event) + 
+			"\n (delay: " +(System.currentTimeMillis() - event.getTimeStamp()) +")\n");
 	}
 	
 	public GameEntity getEntity(int id) {

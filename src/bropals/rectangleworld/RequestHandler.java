@@ -11,16 +11,16 @@ import java.net.Socket;
 /**
 	Object that will hold a list of ClientConnection objects and listens
 	for input from them, broadcasting any messages. Also handles the 
-	special request of new clients.
+	special request of new connections.
 */
 public class RequestHandler {
 	
-	private List<ClientConnection> clients;
+	private List<ClientConnection> connections;
 	private ServerSocket server;
 	private GameWorld world;
 	
 	public RequestHandler(ServerSocket s, GameWorld w) {
-		this.clients = Collections.synchronizedList(new ArrayList<ClientConnection>());
+		this.connections = Collections.synchronizedList(new ArrayList<ClientConnection>());
 		this.server = s;
 		this.world = w;
 	}
@@ -33,7 +33,7 @@ public class RequestHandler {
 			world.addEvent(event); // add it's own event
 		}
 		
-		// tell the clients to do the same thing
+		// tell the connections to do the same thing
 		broadcastToClients(msg, id);
 	}
 	
@@ -42,8 +42,8 @@ public class RequestHandler {
 		if the idOfSender is -1, then it's a message the server sent to itself
 	*/
 	private void broadcastToClients(String msg, int idOfSender) {
-		synchronized (clients) {
-			Iterator iterator = clients.iterator();
+		synchronized (connections) {
+			Iterator iterator = connections.iterator();
 			while (iterator.hasNext()) {
 				ClientConnection cc = (ClientConnection)iterator.next();
 				if (idOfSender == -1 || cc.getID() != idOfSender) {
@@ -54,7 +54,7 @@ public class RequestHandler {
 	}
 	
 	public void addClient(ClientConnection client) {
-		clients.add(client);
+		connections.add(client);
 		
 		// send a copy of the world?
 		List<GameEntity> entities = world.getEntities();
@@ -76,5 +76,29 @@ public class RequestHandler {
 		}
 		
 		client.getOut().println(GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getID())));
+	}
+	
+	public void removeClient(int idNum) {
+		ClientConnection connection = null;
+		synchronized (connections) {
+			Iterator i = connections.iterator();
+			while (i.hasNext()) {
+				ClientConnection cc = (ClientConnection)i.next();
+				if (cc.getID() == idNum) {
+					connection = cc;
+					break;
+				}
+			}
+		}
+		if (connection != null) {
+			connections.remove(connection);
+			connection.stopSelf();
+		} else {
+			System.out.println("Could not find the client with the id number " + idNum + ": Failed removal");
+		}
+	}
+	
+	public int getNumberOfClients() {
+		return connections.size();
 	}
 }

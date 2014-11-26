@@ -132,7 +132,8 @@ public class RectangleWorldClient {
 			PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), idOfPlayer, 
 				150, 150, 50, 50, Color.RED, playerName);
 			world.addEvent(pae);
-			output.println(GameEventParser.translateEvent(pae)); // send it over to the server
+			output.println(GameEventParser.translateEvent(pae)); // send it over to the serve
+			System.out.println("I have created a player and told the server all about it");
 		}
 	}
 	

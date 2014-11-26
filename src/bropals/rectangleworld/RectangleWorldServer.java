@@ -30,9 +30,9 @@ public class RectangleWorldServer {
 				Socket nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);
 				requestHandler.addClient(connection);
-				Thread newThread = new Thread(connection);
-				newThread.run();
-				threads.add(newThread);
+				connection.startListening();
+				System.out.println("Accepted connection from " + nextSocket.getInetAddress().toString() + 
+							"(now have " + requestHandler.getNumberOfClients() + " clients)");
 			} catch(Exception e) {
 				System.out.println("Error in main class: " + e.toString());
 				running = false;
