@@ -39,6 +39,7 @@ public class ClientConnection implements Runnable {
 			System.out.println("IO Error: " + e.toString());
 			//Need to have the server disconnect this connection
 		}
+		System.out.println("Client " + id + " has finished its run method");
 	}
 	
 	public void stopSelf() {

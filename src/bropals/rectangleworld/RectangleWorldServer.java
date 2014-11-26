@@ -43,6 +43,7 @@ public class RectangleWorldServer {
 			} catch(SocketException socketException) {
 				System.out.println("Server got shutdown: " + socketException.toString());
 				/* Need to shutdown all clients here */
+				
 			} catch(Exception e) {
 				System.out.println("Error in main class: " + e.toString());
 			}
