@@ -19,7 +19,7 @@ public class RequestHandler {
 	private GameWorld world;
 	
 	public RequestHandler(GameWorld w) {
-		this.connections = new ArrayList<ClientConnection();
+		this.connections = new ArrayList<ClientConnection>();
 		this.world = w;
 	}
 	
