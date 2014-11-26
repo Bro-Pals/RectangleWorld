@@ -3,7 +3,7 @@ package bropals.rectangleworld;
 public enum Direction {
 	NORTH_SOUTH, EAST_WEST;
 	
-	public static Direction getByID(int id) {
+	public static Direction getDirectionByID(int id) {
 		if (id == 0) {
 			return NORTH_SOUTH;
 		} else {
