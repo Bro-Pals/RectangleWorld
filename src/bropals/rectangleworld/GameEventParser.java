@@ -17,22 +17,23 @@ public class GameEventParser {
 	private static final String SEPARATOR = " ";
 
 	public static GameEvent parseMessage(String msg) {
-		String paramList = msg.split(SEPARATOR);
+		String[] paramList = msg.split(SEPARATOR);
 		long timeStamp = Long.parseLong(paramList[0]);
 		int eventId = Integer.parseInt(paramList[1]);
+		int id;
 		switch(eventId) {
 			case START_MOVE_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
 				float vel = Float.parseFloat(paramList[4]);
 				return new StartMoveEvent(timeStamp, id, direction, amount);
 			case STOP_MOVE_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				Direction direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
 				float posDir = Integer.parseInt(paramList[4]);
 				return new StopMoveEvent(timeStamp, id, direction, posDir);
 			case ENTITY_ADD_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				float posX = Float.parseFloat(paramList[3]);
 				float posY = Float.parseFloat(paramList[4]);
 				Color color = getColorFromID(Integer.parseInt(paramList[5]));
@@ -40,19 +41,19 @@ public class GameEventParser {
 				float height = Float.parseFloat(paramList[7]);
 				return new EntityAddEvent(timeStamp, id, posX, posY, width, height, color);
 			case  ENTITY_REMOVE_EVENT:
-				int id = Integer.parseInt();
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				return new EntityRemoveEvent(timeStamp, id);
 			case COLOR_CHANGE_EVENT:
-				
-				break;
+				id = Integer.parseInt(paramList[2]);
+				Color color = getColorFromID(Integer.parseInt(paramList[3]));
+				return new ColorChangeEvent(timeStamp, id, color);
 			case CHAT_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				String text = paramList[3];
 				return new ChatEvent(timeStamp, id, text);
 				break;
 			case PLAYER_ADD_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				float posX = Float.parseFloat(paramList[3]);
 				float posY = Float.parseFloat(paramList[4]);
 				Color color = getColorFromID(Integer.parseInt(paramList[5]));
@@ -61,7 +62,7 @@ public class GameEventParser {
 				float height = Float.parseFloat(paramList[8]);
 				return new PlayerAddEvent(timeStamp, id, posX, posY, width, height, color, name);
 			case JOIN_EVENT:
-				int id = Integer.parseInt(paramList[2]);
+				id = Integer.parseInt(paramList[2]);
 				return new JoinEvent(timeStamp, id);
 		}
 		return null;

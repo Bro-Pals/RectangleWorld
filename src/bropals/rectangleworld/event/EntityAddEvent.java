@@ -8,6 +8,7 @@ public class EntityAddEvent extends GameEvent {
 	private int id;
 	private Color color;
 	private float posX, posY;
+	private float width, height;
 	
 	public EntityAddEvent(long timeStamp, int id, float posX, float posY, float width, float height, Color color) {
 		setTimeStamp(timeStamp);
