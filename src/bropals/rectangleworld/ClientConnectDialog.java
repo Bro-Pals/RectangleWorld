@@ -64,4 +64,16 @@ public class ClientConnectDialog extends JFrame {
 	public void addGoButtonActionListener(ActionListener al) {
 		go.addActionListener(al);
 	}
+	
+	public boolean validInputs() {
+		boolean valid = true;
+		char[] array = name.getText().toCharArray();
+		for (int i=0; i<array.length; i++) {
+			if (array[i] == GameEventParser.SEPARATOR) {
+				valid = false;
+				break;
+			}
+		}
+		return valid;
+	}
 }

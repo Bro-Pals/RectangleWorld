@@ -27,39 +27,46 @@ public class RectangleWorldClient {
 		dialog.addGoButtonActionListener(new ActionListener() { 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/*
-					When the go button is pressed, connect the client to the server
-					with the information provided.
-				*/
-				String playerName = dialog.getName();
-				InetAddress address = null;
-				try {
-					address = dialog.getIPAddress();
- 				} catch(UnknownHostException uhe) {
-					JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
 				dialog.setVisible(false);
-				if (address!=null) {
+				if (dialog.validInputs()) {
 					/*
-						Continue creating the world. Error box popped up if the 
-						address location is unknown (UnknownHostException)
+						When the go button is pressed, connect the client to the server
+						with the information provided.
 					*/
-					RectangleWorldClient client = null;
+					String playerName = dialog.getName();
+					
+					InetAddress address = null;
 					try {
-						client = new RectangleWorldClient(playerName, address);
-					} catch(IOException ioe) {
-						JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-						client = null;
+						address = dialog.getIPAddress();
+					} catch(UnknownHostException uhe) {
+						JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
-					if (client!=null) {
-						System.out.println("Successfully established a connection with the server at " + address.toString());
-						System.out.println();
-						dialog.dispose(); //Don't need the dialog anymore.
-						client.loop();
-					} else {
-						//Could not connect, open the dialog again
-						dialog.setVisible(true);
+					if (address!=null) {
+						/*
+							Continue creating the world. Error box popped up if the 
+							address location is unknown (UnknownHostException)
+						*/
+						RectangleWorldClient client = null;
+						try {
+							client = new RectangleWorldClient(playerName, address);
+						} catch(IOException ioe) {
+							JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+							client = null;
+						}
+						if (client!=null) {
+							System.out.println("Successfully established a connection with the server at " + address.toString());
+							System.out.println();
+							dialog.dispose(); //Don't need the dialog anymore.
+							client.loop();
+						} else {
+							//Could not connect, open the dialog again
+							dialog.setVisible(true);
+						}
 					}
+				} else {
+					//Invalid input, tell them the error
+					JOptionPane.showMessageDialog(dialog, "Invalid name: name may not contain \"" + GameEventParser.SEPARATOR + "\"", "Invalid name", JOptionPane.ERROR_MESSAGE);
+					dialog.setVisible(true);
 				}
 			}
 		});

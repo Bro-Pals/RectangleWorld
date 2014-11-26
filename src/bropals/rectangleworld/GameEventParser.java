@@ -14,10 +14,10 @@ public class GameEventParser {
 		CHAT_EVENT = 5,
 		ID_ASSIGNMENT_EVENT = 6,
 		PLAYER_ADD_EVENT = 7;
-	private static final String SEPARATOR = " ";
+	public static final char SEPARATOR = '$';
 
 	public static GameEvent parseMessage(String msg) {
-		String[] paramList = msg.split(SEPARATOR);
+		String[] paramList = msg.split("" + SEPARATOR);
 		long timeStamp = Long.parseLong(paramList[0]);
 		int eventId = Integer.parseInt(paramList[1]);
 		int id;
