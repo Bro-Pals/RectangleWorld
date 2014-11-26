@@ -27,10 +27,6 @@ public class ClientConnection implements Runnable {
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	
-	public void startThread() {
-		myThread.start();
-	}
-	
 	@Override
 	public void run() {
 		try {
@@ -44,6 +40,7 @@ public class ClientConnection implements Runnable {
 		} catch(IOException e) {
 			System.out.println("IO Error: " + e.toString());
 			//Need to have the server disconnect this connection
+			stopSelf();
 		}
 	}
 	

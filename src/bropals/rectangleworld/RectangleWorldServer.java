@@ -33,7 +33,7 @@ public class RectangleWorldServer {
 				serverDialog.print("Waiting for another client");
 				nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
-				connection.startThread();
+				new Thread(connection).start();
 				requestHandler.addClient(connection);
 				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 
 					"(now have " + requestHandler.getNumberOfClients() + " clients)");
