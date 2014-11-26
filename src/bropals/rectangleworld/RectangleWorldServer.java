@@ -42,11 +42,14 @@ public class RectangleWorldServer {
 			} catch(SocketException socketException) {
 				System.out.println("Server got shutdown: " + socketException.toString());
 				/* Need to shutdown all clients here */
+				server.close();
 			} catch(Exception e) {
 				System.out.println("Error in main class: " + e.toString());
+				server.close();
 			}
 		}
 		serverDialog.dispose();
+		server.close();
 	}
 	
 	public static int getNewId() {
