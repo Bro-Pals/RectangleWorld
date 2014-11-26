@@ -9,6 +9,12 @@ public class GameWorld {
 	
 	private List<GameEvent> eventQueue;
 	private List<GameEntity> entities;
+	private static final int 
+		boundryLeft = 0, 
+		boundryRight = 1500, 
+		boundryTop = 0, 
+		boundryBottom = 1500
+	;
 	
 	public GameWorld() {
 		eventQueue = Collections.synchronizedList(new ArrayList<GameEvent>());
@@ -23,7 +29,7 @@ public class GameWorld {
 		eventQueue.add(e);
 	}
 	
-	public void update() {
+	public void updateEvents() {
 		/*
 			Handle all received and self-generated game events on this frame; don't let new guys come in
 		*/
@@ -33,17 +39,6 @@ public class GameWorld {
 			while(iterator.hasNext()) {
 				current = (GameEvent)iterator.next();
 				handleEvent(current);
-			}
-		}
-		/*
-			Update this copy of the world, not allowing self generated events to come in
-		*/
-		synchronized (entities) {
-			GameEntity current;
-			Iterator i = entities.iterator();
-			while(i.hasNext()) {
-				current = (GameEntity)i.next();
-				current.update();
 			}
 		}
 	}
@@ -67,4 +62,9 @@ public class GameWorld {
 		System.out.println("Could not find Entity with id " + id);
 		return null;
 	}
+	
+	public int getBoundryRight() { return boundryRight; }
+	public int getBoundryLeft() { return boundryLeft; }
+	public int getBoundryTop() { return boundryTop; }
+	public int getBoundryBottom() { return boundryBottom; }
 }

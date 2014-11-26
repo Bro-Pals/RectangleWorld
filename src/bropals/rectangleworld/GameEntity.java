@@ -27,6 +27,17 @@ public class GameEntity {
 	public void update() {
 		this.x += this.xV;
 		this.y += this.yV;
+		//Check world boundry
+		if (this.x < world.getBoundryLeft()) {
+			this.x = 0;
+		} else if (this.x+w > world.getBoundryRight()) {
+			this.x = world.getBoundryRight()-w;
+		}
+		if (this.y < world.getBoundryTop()) {
+			this.y = 0;
+		} else if (this.y+h > world.getBoundryBottom()) {
+			this.y = world.getBoundryRight()-h;
+		}
 	}
 	
 	public void setGameWorld(GameWorld world) { this.world = world; }

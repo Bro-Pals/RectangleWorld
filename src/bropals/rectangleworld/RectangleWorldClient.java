@@ -110,8 +110,24 @@ public class RectangleWorldClient {
 				Iterator iterator;
 				GameEntity next;
 				//First update all the entities
-				world.update();
+				world.updateEvents();
+				/*
+					Update this copy of the world's entities, not allowing self generated events to come in
+				*/
+				synchronized (entities) {
+					GameEntity current;
+					Iterator i = entities.iterator();
+					while(i.hasNext()) {
+						current = (GameEntity)i.next();
+						current.update();
+						if (current.getID() == idOfPlayer) {
+							//Center this client's camera on the player
+							setCameraPosition(current.getX()-400, current.getY()-300);
+						}
+					}
+				}
 				//Then draw all the entities
+				drawWorldBoundries(g, world);
 				iterator = entities.iterator();
 				while (iterator.hasNext()) {
 					next = (GameEntity)iterator.next();
@@ -145,6 +161,34 @@ public class RectangleWorldClient {
 	public void translateCamera(float x, float y) {
 		cameraX += x;
 		cameraY += y;
+	}
+	
+	public void drawWorldBoundries(Graphics g, GameWorld world) {
+		g.setColor(Color.BLACK);
+		g.drawLine( //Right boundry line
+			(int)(world.getBoundryRight()-cameraX), 
+			(int)(world.getBoundryTop()-cameraY), 
+			(int)(world.getBoundryRight()-cameraX), 
+			(int)(world.getBoundryBottom()-cameraY)
+		);
+		g.drawLine( //Left  boundry line
+			(int)(world.getBoundryLeft()-cameraX), 
+			(int)(world.getBoundryTop()-cameraY), 
+			(int)(world.getBoundryLeft()-cameraX), 
+			(int)(world.getBoundryBottom()-cameraY)
+		);
+		g.drawLine( //Top boundry line
+			(int)(world.getBoundryLeft()-cameraX), 
+			(int)(world.getBoundryTop()-cameraY), 
+			(int)(world.getBoundryRight()-cameraX), 
+			(int)(world.getBoundryTop()-cameraY)
+		);
+		g.drawLine( //Bottom boundry line
+			(int)(world.getBoundryLeft()-cameraX), 
+			(int)(world.getBoundryBottom()-cameraY), 
+			(int)(world.getBoundryRight()-cameraX), 
+			(int)(world.getBoundryBottom()-cameraY)
+		);
 	}
 	
 	public void drawGameEntity(Graphics g, GameEntity ge) {
