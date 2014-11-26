@@ -9,12 +9,22 @@ public class EntityAddEvent extends GameEvent {
 	private Color color;
 	private float posX, posY;
 	
-	public EntityAddEvent(long timeStamp, int id, float posX, float posY, Color color) {
+	public EntityAddEvent(long timeStamp, int id, float posX, float posY, float width, float height, Color color) {
 		setTimeStamp(timeStamp);
 		this.id = id;
 		this.color = color;
 		this.posX = posX;
 		this.posY = posY;
+		this.width = width;
+		this.height = height;
+	}
+	
+	public float getWidth() {
+		return width;
+	}
+	
+	public float getHeight() {
+		return height;
 	}
 	
 	public Color getColor() {
