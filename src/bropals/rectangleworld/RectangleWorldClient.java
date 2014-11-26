@@ -19,6 +19,8 @@ import bropals.rectangleworld.event.*;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public class RectangleWorldClient {
 
@@ -102,11 +104,12 @@ public class RectangleWorldClient {
 	public void loop() {
 		window = new DrawWindow("RectangleWorld", 800, 600, false);
 		/* Have something happen if the user wants to close the window */
-		window.getRawFrame().addWindowListener(new WindowAdapter() {
+		window.getRawFrame().addWindowListener(new WindowAdapter() { 
 			@Override
-			public void windowClosing(WindowEvent weeeeee) {
+			public void windowClosing(WindowEvent we) {
+				window.destroy();
 				onWindowCloseRequest();
-			}	
+			}
 		});
 		Graphics g = window.getDrawGraphics();
 		g.drawString("Waiting for world..", 100, 100);
@@ -127,6 +130,7 @@ public class RectangleWorldClient {
 			
 		*/
 		while (window.exists()) {
+			handleWindowInput();
 			before = System.currentTimeMillis();
 			g = window.getDrawGraphics();
 			List<GameEntity> entities = world.getEntities();
@@ -138,16 +142,14 @@ public class RectangleWorldClient {
 				/*
 					Update this copy of the world's entities, not allowing self generated events to come in
 				*/
-				synchronized (entities) {
-					GameEntity current;
-					Iterator i = entities.iterator();
-					while(i.hasNext()) {
-						current = (GameEntity)i.next();
-						current.update();
-						if (current.getID() == idOfPlayer) {
-							//Center this client's camera on the player
-							setCameraPosition(current.getX()-400, current.getY()-300);
-						}
+				GameEntity current;
+				Iterator i = entities.iterator();
+				while(i.hasNext()) {
+					current = (GameEntity)i.next();
+					current.update();
+					if (current.getID() == idOfPlayer) {
+						//Center this client's camera on the player
+						setCameraPosition(current.getX()-400, current.getY()-300);
 					}
 				}
 				g.setColor(Color.WHITE);
@@ -208,6 +210,25 @@ public class RectangleWorldClient {
 	public void translateCamera(float x, float y) {
 		cameraX += x;
 		cameraY += y;
+	}
+	
+	private void handleWindowInput() {
+		KeyEvent k;
+		MouseEvent m;
+		while ((k = window.nextKeyPressedEvent()) != null) {
+			if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				onWindowCloseRequest();
+			}
+		}
+		while ((k = window.nextKeyReleasedEvent()) != null) {
+			
+		}
+		while ((m = window.nextMousePressedEvent()) != null) {
+			
+		}
+		while ((m = window.nextMouseReleasedEvent()) != null) {
+			
+		}
 	}
 	
 	public void drawWorldBoundries(Graphics g, GameWorld world) {
