@@ -202,5 +202,14 @@ public class RectangleWorldClient {
 			(int)ge.getWidth(),
 			(int)ge.getHeight()
 		);
+		if (ge instanceof PlayerEntity) {
+			PlayerEntity pe = (PlayerEntity)ge;
+			g.setColor(Color.BLACK);
+			g.drawString(
+				pe.getName(),
+				(int)(ge.getX()-cameraX),
+				(int)(ge.getY()-cameraY)-15
+			);
+		}
 	}
 }
