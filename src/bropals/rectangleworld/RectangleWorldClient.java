@@ -230,7 +230,7 @@ public class RectangleWorldClient {
 			g.drawString(
 				pe.getName(),
 				(int)(ge.getX()-cameraX),
-				(int)(ge.getY()-cameraY)-15
+				(int)(ge.getY()-cameraY)-10
 			);
 		}
 	}
