@@ -2,6 +2,7 @@ package bropals.rectangleworld;
 
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -12,8 +13,10 @@ public class RectangleWorldServer {
 	
 	public static void main(String[] args) {
 		ServerSocket server = null;
+		ServerDialog serverDialog = null;
 		try {
 			server = new ServerSocket(SERVER_PORT);
+			serverDialog = new ServerDialog(server);
 		} catch(IOException fsfs) {
 			System.err.println("Unable to create server at socket " + SERVER_PORT + ": " + fsfs.toString());
 			//Just stop the program
@@ -24,29 +27,26 @@ public class RectangleWorldServer {
 		RequestHandler requestHandler = new RequestHandler(world);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
-		boolean running = true;
 		Socket nextSocket;
-		while (running) {
+		while (serverDialog.isRunning()) {
 			try {
-				System.out.println("Waiting for another client");
+				serverDialog.print("Waiting for another client");
 				nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
 				Thread t = new Thread(connection);
 				threads.add(t);
 				t.start();
 				requestHandler.addClient(connection);
-				System.out.println("Accepted connection from " + nextSocket.getInetAddress().toString() + 
+				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 
 							"(now have " + requestHandler.getNumberOfClients() + " clients)");
+			} catch(SocketException socketException) {
+				System.out.println("Server got shutdown: " + socketException.toString());
+				/* Need to shutdown all clients here */
 			} catch(Exception e) {
 				System.out.println("Error in main class: " + e.toString());
-				running = false;
 			}
 		}
-		try {
-			server.close();
-		} catch(IOException fsfs2) {
-			System.err.println("Unable to close the server at socket " + SERVER_PORT + ": " + fsfs2.toString());
-		}
+		serverDialog.dispose();
 	}
 	
 	public static int getNewId() {
