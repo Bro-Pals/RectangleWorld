@@ -89,7 +89,7 @@ public class RectangleWorldClient {
 		*/
 		while (window.exists()) {
 			before = System.currentTimeMillis();
-			Graphics g = window.getDrawGraphics();
+			g = window.getDrawGraphics();
 			List<GameEntity> entities = world.getEntities();
 			synchronized (entities) { //What is a synchronized block? (need to do research)
 				Iterator iterator;

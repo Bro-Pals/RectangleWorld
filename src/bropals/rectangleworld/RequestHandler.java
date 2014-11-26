@@ -29,7 +29,7 @@ public class RequestHandler {
 	public void handleRequest(String msg, int id) {
 		GameEvent event = GameEventParser.parseMessage(msg);
 		
-		if (!(event instanceof JoinEvent)) {
+		if (!(event instanceof IdAssignmentEvent)) {
 			world.addEvent(event); // add it's own event
 		}
 		
@@ -61,18 +61,21 @@ public class RequestHandler {
 		world.addEvent(GameEventParser.parseMessage(playerAddMsg)); // server adds the player
 		
 		// send a copy of the world?
-		ArrayList<GameEntity> entities = world.getEntities();
-		for (int i=0; i<entities.size(); i++) {
-			GameEntity ent = entities.get(i);
-			if (ent instanceof PlayerEntity) {
-				PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getId(), 
-					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
-					((PlayerEntity)ent).getName());
-				client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
-			} else {
-				GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getId(), 
-					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
-				client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
+		List<GameEntity> entities = world.getEntities();
+		synchronized (entities) {
+			Iterator i = entities.iterator();
+			while (i.hasNext()) {
+				GameEntity ent = (GameEntity)i.next();
+				if (ent instanceof PlayerEntity) {
+					PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getId(), 
+						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
+						((PlayerEntity)ent).getName());
+					client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
+				} else {
+					GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getId(), 
+						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
+					client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
+				}
 			}
 		}
 		
