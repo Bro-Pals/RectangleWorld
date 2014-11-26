@@ -51,7 +51,9 @@ public class RectangleWorldClient {
 						System.out.println();
 						//Client established the connection properly
 						DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
-						getWorldFromServer();
+						world = new GameWorld();
+						
+						// make a ServerConnection to handle request
 						
 						while (window.exists()) {
 							Graphics g = window.getDrawGraphics();
@@ -88,7 +90,4 @@ public class RectangleWorldClient {
 		output = new PrintWriter(socket.getOutputStream());
 	}
 	
-	public static void getWorldFromServer() {
-		world = new GameWorld();
-	}
 }
