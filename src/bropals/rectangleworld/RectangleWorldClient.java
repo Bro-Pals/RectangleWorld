@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import java.io.IOException;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
 import horsentp.simpledrawing.DrawWindow;
 
 public class RectangleWorldClient {
@@ -49,30 +51,7 @@ public class RectangleWorldClient {
 					if (client!=null) {
 						System.out.println("Successfully established a connection with the server at " + address.toString());
 						System.out.println();
-						//Client established the connection properly
-						DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
-						Graphics g = window.getDrawGraphics();
-						g.drawString("Waiting for world..", 100, 100);
-						window.showBuffer(g);
-						
-						world = new GameWorld();
-						
-						// make a ServerConnection to handle request
-						
-						while (window.exists()) {
-							Graphics g = window.getDrawGraphics();
-							ArrayList<GameEntity> entities = world.getEntities();
-							for (int i=0; i<entities.size(); i++) {
-								g.setColor(entities.get(i).getColor());
-								g.fillRect((int)entities.get(i).getX(),
-											(int)entities.get(i).getY(),
-											(int)entities.get(i).getWidth(),
-											(int)entities.get(i).getHeight());
-							}
-							
-							window.showBuffer(g);
-							try { Thread.sleep(40); } catch(Exception threade) {} // sleep
-						}
+						client.loop();
 					}
 				}
 			}
@@ -94,4 +73,54 @@ public class RectangleWorldClient {
 		output = new PrintWriter(socket.getOutputStream());
 	}
 	
+	public void loop() {
+		DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
+		Graphics g = window.getDrawGraphics();
+		g.drawString("Waiting for world..", 100, 100);
+		window.showBuffer(g);
+		world = new GameWorld();
+		
+		// make a ServerConnection to handle request
+		long before, delta;
+		final long mpf = 20; //Milliseconds per frame
+		
+		/*
+			The loop in question
+		*/
+		while (window.exists()) {
+			before = System.currentTimeMillis();
+			Graphics g = window.getDrawGraphics();
+			List<GameEntity> entities = world.getEntities();
+			synchronized (entities) { //What is a synchronized block? (need to do research)
+				Iterator iterator;
+				GameEntity next;
+				//First update all the entities
+				iterator = entities.iterator();
+				while (iterator.hasNext()) {
+					next = (GameEntity)iterator.next();
+					next.update();
+				}
+				//Then draw all the entities
+				iterator = entities.iterator();
+				while (iterator.hasNext()) {
+					next = (GameEntity)iterator.next();
+					drawGameEntity(g, next);
+				}
+			}
+			window.showBuffer(g);
+			delta = System.currentTimeMillis();
+			if (delta < mpf) {
+				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
+			}
+		}
+	}
+	
+	public void drawGameEntity(Graphics g, GameEntity ge) {
+		g.setColor(ge.getColor());
+		g.fillRect((int)ge.getX(),
+			(int)ge.getY(),
+			(int)ge.getWidth(),
+			(int)ge.getHeight()
+		);
+	}
 }
