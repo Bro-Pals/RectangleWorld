@@ -19,6 +19,7 @@ public class ClientEventWatcher implements Runnable {
 		this.in=in;
 		this.out=out;
 		this.daMainClass = rwc;
+		this.world=world;
 	}
 	
 	@Override

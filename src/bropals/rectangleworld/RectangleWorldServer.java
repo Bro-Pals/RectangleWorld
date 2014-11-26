@@ -27,7 +27,7 @@ public class RectangleWorldServer {
 		boolean running = true;
 		while (running) {
 			try {
-				System.out.println("Waiting for another client");
+				System.out.println("Waiting for another client at  " + server.getLocalSocketAddress().toString());
 				Socket nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);				
 				connection.startListening(new Thread(connection));
