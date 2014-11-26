@@ -8,7 +8,8 @@ import java.io.IOException;
 public class RectangleWorldServer {
 
 	public static final int SERVER_PORT = 18002;
-
+	public static int lastId = 0; // keep track of the last ID number so it's always unique
+	
 	public static void main(String[] args) {
 		ServerSocket server = null;
 		try {
@@ -22,15 +23,13 @@ public class RectangleWorldServer {
 		RequestHandler requestHandler = new RequestHandler(server, world);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
-		int nextId = 0; // keeping track of the unique ID numbers
-		
-		
 		
 		boolean running = true;
 		while (running) {
 			try {
 				Socket nextSocket = server.accept();
 				ClientConnection connection = new ClientConnection(nextSocket, nextId, requestHandler);
+				nextId++; // so the next Id is gonna be unique
 				requestHandler.addClient(connection);
 				Thread newThread = new Thread(connection);
 				newThread.run();
