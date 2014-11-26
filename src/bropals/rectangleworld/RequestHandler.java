@@ -26,7 +26,9 @@ public class RequestHandler {
 	public void handleRequest(String msg, int id) {
 		GameEvent event = GameEventParser.parseMessage(msg);
 		
-		
+		if (!(event instanceof JoinEvent)) {
+			world.addEvent(event); // add it's own event
+		}
 		
 		// tell the clients to do the same thing
 		broadcastToClients(msg, id);
@@ -47,8 +49,9 @@ public class RequestHandler {
 	public void addClient(ClientConnection client) {
 		clients.add(client);
 		
-		// send the client a JoinEvent, telling it what it's Player's id number should be
-		client.getOut().println(GameEventParser.translateEvent(new JointEvent(System.currentTimeMillis(), client.getId())));
+		String playerAddMsg = "";
+		broadcastToClients(playerAddMsg, -1);
+		world.addEvent(GameEventParser.parseMessage(playerAddMsg)); // server adds the player
 		
 		// send a copy of the world?
 		ArrayList<GameEntity> entities = world.getEntities();
@@ -66,5 +69,6 @@ public class RequestHandler {
 			}
 		}
 		
+		client.getOut().println(GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getId())));
 	}
 }

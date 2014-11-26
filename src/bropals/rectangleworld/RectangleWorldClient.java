@@ -51,6 +51,10 @@ public class RectangleWorldClient {
 						System.out.println();
 						//Client established the connection properly
 						DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
+						Graphics g = window.getDrawGraphics();
+						g.drawString("Waiting for world..", 100, 100);
+						window.showBuffer(g);
+						
 						world = new GameWorld();
 						
 						// make a ServerConnection to handle request

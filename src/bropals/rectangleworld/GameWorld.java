@@ -15,4 +15,8 @@ public class GameWorld {
 	public ArrayList<GameEntity> getEntities() {
 		return entities;
 	}
+	
+	public void addEvent(GameEvent e) {
+		eventQueue.add(e);
+	}
 }

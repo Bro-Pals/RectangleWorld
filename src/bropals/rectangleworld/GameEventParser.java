@@ -12,7 +12,7 @@ public class GameEventParser {
 		ENTITY_REMOVE_EVENT = 3,
 		COLOR_CHANGE_EVENT = 4,
 		CHAT_EVENT = 5,
-		JOIN_EVENT = 6,
+		ID_ASSIGNMENT_EVENT = 6,
 		PLAYER_ADD_EVENT = 7;
 	private static final String SEPARATOR = " ";
 
@@ -63,9 +63,9 @@ public class GameEventParser {
 				width = Float.parseFloat(paramList[7]);
 				height = Float.parseFloat(paramList[8]);
 				return new PlayerAddEvent(timeStamp, id, posX, posY, width, height, color, name);
-			case JOIN_EVENT:
+			case ID_ASSIGNMENT_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				return new JoinEvent(timeStamp, id);
+				return new IdAssignmentEvent(timeStamp, id);
 		}
 		return null;
 	}
@@ -92,9 +92,9 @@ public class GameEventParser {
 		} else if (e instanceof StopMoveEvent) {
 			StopMoveEvent sme = (StopMoveEvent)e;
 			return "" + sme.getTimeStamp()  + SEPARATOR + STOP_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getDirectionalPosition();
-		} else if (e instanceof JoinEvent) {
-			JoinEvent je = (JoinEvent)e;
-			return "" + je.getTimeStamp() + SEPARATOR + JOIN_EVENT;
+		} else if (e instanceof IdAssignmentEvent) {
+			IdAssignmentEvent iae = (IdAssignmentEvent)e;
+			return "" + iae.getTimeStamp() + SEPARATOR + ID_ASSIGNMENT_EVENT + SEPARATOR + iae.getId();
 		}
 		return null;
 	}
