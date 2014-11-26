@@ -29,17 +29,22 @@ public class GameEventParser {
 			ColorChangeEvent cce = (ColorChangeEvent)e;
 			return "" + COLOR_CHANGE_EVENT + SEPARATOR + cce.getID() + SEPARATOR + getColorID(cce.getColor());
 		} else if (e instanceof EntityAddEvent) {
-		
+			EntityAddEvent eae = (EntityAddEvent)e;
+			return "" + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor());
 		} else if (e instanceof EntityRemoveEvent) {
-		
+			EntityRemoveEvent ere = (EntityRemoveEvent)e;
+			return "" + ENTITY_REMOVE_EVENT + SEPARATOR + ere.getID();
 		} else if (e instanceof JoinEvent) {
-		
+			return "" + JOIN_EVENT;
 		} else if (e instanceof PlayerAddEvent) {
-		
-		} else if (e instanceof ColorChangeEvent) {
-		
-		} else if (e instanceof ColorChangeEvent) {
-		
+			PlayerAddEvent eae = (PlayerAddEvent)e;
+			return "" + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName();
+		} else if (e instanceof StartMoveEvent) {
+			StartMoveEvent sme = (StartMoveEvent)e;
+			return "" + START_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getVelocity();
+		} else if (e instanceof StopMoveEvent) {
+			StopMoveEvent sme = (StopMoveEvent)e;
+			return "" + STOP_MOVE_EVENT + SEPARATOR + sme.getID();
 		}
 		return null;
 	}
