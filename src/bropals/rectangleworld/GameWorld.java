@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.Iterator;
+import bropals.rectangleworld.event.*;
 
 public class GameWorld {
 	
@@ -51,6 +52,54 @@ public class GameWorld {
 	public void handleEvent(GameEvent event) {
 		System.out.println("Handling an event! \n msg: " + GameEventParser.translateEvent(event) + 
 			"\n (delay: " +(System.currentTimeMillis() - event.getTimeStamp()) +")\n");
+		if (event instanceof ChatEvent) {
+			PlayerEntity pent = (PlayerEntity)getEntity(event.getID()); // it should be a player that talked
+			ChatEvent chate = (ChatEvent)event;
+			if (pent != null) {
+				System.out.println(pent.getName() + " : \"" + chate.getText() + "\"");
+			}
+		} else if (event instanceof ColorChangeEvent) {
+			GameEntity ent = getEntity(event.getID());
+			ColorChangeEvent cce = (ColorChangeEvent)event;
+			if (ent != null) {
+				ent.setColor(cce.getColor());
+			}
+		} else if (event instanceof EntityAddEvent) {
+			EntityAddEvent eae = (EntityAddEvent)event;
+			entities.add(new GameEntity(eae.getID(), this, eae.getColor(), eae.getPositionX(), 
+				 eae.getPositionY(), eae.getWidth(), eae.getHeight()));
+		} else if (event instanceof EntityRemoveEvent) {
+			GameEntity ent = getEntity(event.getID());
+			if (ent != null) {
+				entities.remove(ent);
+			}
+		} else if (event instanceof PlayerAddEvent) {
+			PlayerAddEvent pae = (PlayerAddEvent)event;
+			entities.add(new PlayerEntity(pae.getID(), this, pae.getColor(), pae.getPositionX(), 
+				 pae.getPositionY(), pae.getWidth(), pae.getHeight(), pae.getName()));
+		} else if (event instanceof StartMoveEvent) {
+			GameEntity ent = getEntity(event.getID());
+			StartMoveEvent sme = (StartMoveEvent)event;
+			if (ent != null) {
+				if (sme.getDirection() == Direction.NORTH_SOUTH) {
+					ent.setYVelocity(sme.getVelocity());
+				} else {
+					ent.setXVelocity(sme.getVelocity());
+				}
+			}
+		} else if (event instanceof StopMoveEvent) {
+			GameEntity ent = getEntity(event.getID());
+			StopMoveEvent sme = (StopMoveEvent)event;
+			if (ent != null) {
+				if (sme.getDirection() == Direction.NORTH_SOUTH) {
+					ent.setYVelocity(0);
+					ent.setY(sme.getDirectionalPosition());
+				} else {
+					ent.setXVelocity(0);
+					ent.setX(sme.getDirectionalPosition());
+				}
+			}
+		}
 	}
 	
 	public GameEntity getEntity(int id) {
