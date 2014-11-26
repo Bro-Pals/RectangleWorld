@@ -96,6 +96,8 @@ public class RectangleWorldClient {
 		Thread eventWatcherThread = new Thread(eventWatcher);
 		eventWatcherThread.start(); // start listening for events
 		
+		
+		
 		long before, delta;
 		final long mpf = 20; //Milliseconds per frame
 		
