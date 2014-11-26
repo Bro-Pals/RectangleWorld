@@ -2,6 +2,9 @@ package bropals.rectangleworld;
 
 import bropals.rectangleworld.event.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collections;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,12 +15,12 @@ import java.net.Socket;
 */
 public class RequestHandler {
 	
-	private ArrayList<ClientConnection> clients;
+	private List<ClientConnection> clients;
 	private ServerSocket server;
 	private GameWorld world;
 	
 	public RequestHandler(ServerSocket s, GameWorld w) {
-		this.clients = new ArrayList<>();
+		this.clients = Collections.synchronizedList(new ArrayList<ClientConnection>());
 		this.server = s;
 		this.world = w;
 	}
@@ -37,9 +40,13 @@ public class RequestHandler {
 		if the idOfSender is -1, then it's a message the server sent to itself
 	*/
 	private void broadcastToClients(String msg, int idOfSender) {
-		for (int i=0; i<clients.size(); i++) {
-			if (idOfSender == -1 || clients.get(i).getId() != idOfSender) {
-				clients.get(i).getOut().println(msg);
+		synchronized (clients) {
+			Iterator iterator = clients.iterator();
+			while (iterator.hasNext()) {
+				ClientConnection cc = (ClientConnection)iterator.next();
+				if (idOfSender == -1 || cc.getId() != idOfSender) {
+					cc.getOut().println(msg);
+				}
 			}
 		}
 	}
