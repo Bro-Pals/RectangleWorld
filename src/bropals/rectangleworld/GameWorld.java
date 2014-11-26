@@ -11,4 +11,8 @@ public class GameWorld {
 		eventQueue = new ArrayList<>();
 		entities = new ArrayList<>();
 	}
+	
+	public ArrayList<GameEntity> getEntities() {
+		return entities;
+	}
 }

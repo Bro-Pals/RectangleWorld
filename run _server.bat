@@ -1,3 +1,3 @@
 @echo off
-java -jar RectangleWorldClient.jar
+java -jar RectangleWorldServer.jar
 PAUSE
