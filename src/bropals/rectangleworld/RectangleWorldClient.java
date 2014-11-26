@@ -134,39 +134,37 @@ public class RectangleWorldClient {
 			before = System.currentTimeMillis();
 			g = window.getDrawGraphics();
 			List<GameEntity> entities = world.getEntities();
-			synchronized (entities) { //What is a synchronized block? (need to do research)
-				Iterator iterator;
-				GameEntity next;
-				//First update all the entities
-				world.updateEvents();
-				/*
-					Update this copy of the world's entities, not allowing self generated events to come in
-				*/
-				GameEntity current;
-				Iterator i = entities.iterator();
-				while(i.hasNext()) {
-					current = (GameEntity)i.next();
-					current.update();
-					if (current.getID() == idOfPlayer) {
-						//Center this client's camera on the player
-						setCameraPosition(current.getX()-400, current.getY()-300);
-					}
-				}
-				g.setColor(Color.WHITE);
-				g.fillRect(0, 0, 800, 600);
-				//Then draw all the entities
-				drawWorldBoundries(g, world);
-				iterator = entities.iterator();
-				while (iterator.hasNext()) {
-					next = (GameEntity)iterator.next();
-					drawGameEntity(g, next);
+			Iterator iterator;
+			GameEntity next;
+			//First update all the entities
+			world.updateEvents();
+			/*
+				Update this copy of the world's entities, not allowing self generated events to come in
+			*/
+			GameEntity current;
+			Iterator i = entities.iterator();
+			while(i.hasNext()) {
+				current = (GameEntity)i.next();
+				current.update();
+				if (current.getID() == idOfPlayer) {
+					//Center this client's camera on the player
+					setCameraPosition(current.getX()-400, current.getY()-300);
 				}
 			}
-			window.showBuffer(g);
-			delta = System.currentTimeMillis()-before;
-			if (delta < mpf) {
-				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, 800, 600);
+			//Then draw all the entities
+			drawWorldBoundries(g, world);
+			iterator = entities.iterator();
+			while (iterator.hasNext()) {
+				next = (GameEntity)iterator.next();
+				drawGameEntity(g, next);
 			}
+		}
+		window.showBuffer(g);
+		delta = System.currentTimeMillis()-before;
+		if (delta < mpf) {
+			try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
 		}
 	}
 	

@@ -15,11 +15,11 @@ import java.net.Socket;
 */
 public class RequestHandler {
 	
-	private List<ClientConnection> connections;
+	private ArrayList<ClientConnection> connections;
 	private GameWorld world;
 	
 	public RequestHandler(GameWorld w) {
-		this.connections = Collections.synchronizedList(new ArrayList<ClientConnection>());
+		this.connections = new ArrayList<ClientConnection();
 		this.world = w;
 	}
 	
@@ -40,13 +40,11 @@ public class RequestHandler {
 		if the idOfSender is -1, then it's a message the server sent to itself
 	*/
 	private void broadcastToClients(String msg, int idOfSender) {
-		synchronized (connections) {
-			Iterator iterator = connections.iterator();
-			while (iterator.hasNext()) {
-				ClientConnection cc = (ClientConnection)iterator.next();
-				if (idOfSender == -1 || cc.getID() != idOfSender) {
-					cc.getOut().println(msg);
-				}
+		Iterator iterator = connections.iterator();
+		while (iterator.hasNext()) {
+			ClientConnection cc = (ClientConnection)iterator.next();
+			if (idOfSender == -1 || cc.getID() != idOfSender) {
+				cc.getOut().println(msg);
 			}
 		}
 	}
@@ -56,23 +54,21 @@ public class RequestHandler {
 		
 		// send a copy of the world?
 		
-		List<GameEntity> entities = world.getEntities();
+		ArrayList<GameEntity> entities = world.getEntities();
 		System.out.println("Sending information on " + entities.size() + " entities");
-		synchronized (entities) {
-			Iterator i = entities.iterator();
-			while (i.hasNext()) {
-				System.out.println("Sending information about " + i.toString());
-				GameEntity ent = (GameEntity)i.next();
-				if (ent instanceof PlayerEntity) {
-					PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getID(), 
-						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
-						((PlayerEntity)ent).getName());
-					client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
-				} else {
-					GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getID(), 
-						ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
-					client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
-				}
+		Iterator i = entities.iterator();
+		while (i.hasNext()) {
+			System.out.println("Sending information about " + i.toString());
+			GameEntity ent = (GameEntity)i.next();
+			if (ent instanceof PlayerEntity) {
+				PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getID(), 
+					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor(), 
+					((PlayerEntity)ent).getName());
+				client.getOut().println(GameEventParser.translateEvent(pae)); // send the message of the event
+			} else {
+				GameEvent eve = new EntityAddEvent(System.currentTimeMillis(), ent.getID(), 
+					ent.getX(), ent.getY(), ent.getWidth(), ent.getHeight(), ent.getColor());
+				client.getOut().println(GameEventParser.translateEvent(eve)); // send the message of the event
 			}
 		}
 		
@@ -83,14 +79,12 @@ public class RequestHandler {
 	
 	public void removeClient(int idNum) {
 		ClientConnection connection = null;
-		synchronized (connections) {
-			Iterator i = connections.iterator();
-			while (i.hasNext()) {
-				ClientConnection cc = (ClientConnection)i.next();
-				if (cc.getID() == idNum) {
-					connection = cc;
-					break;
-				}
+		Iterator i = connections.iterator();
+		while (i.hasNext()) {
+			ClientConnection cc = (ClientConnection)i.next();
+			if (cc.getID() == idNum) {
+				connection = cc;
+				break;
 			}
 		}
 		if (connection != null) {
