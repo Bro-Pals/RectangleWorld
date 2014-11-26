@@ -18,10 +18,13 @@ public class RectangleWorldServer {
 			//Just stop the program
 			return;
 		}
+		GameWorld world = new GameWorld(); // the server's copy of game world
 		RequestHandler requestHandler = new RequestHandler(server);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
-		int nextId = 0;
+		int nextId = 0; // keeping track of the unique ID numbers
+		
+		
 		
 		boolean running = true;
 		while (running) {
