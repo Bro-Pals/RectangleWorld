@@ -57,10 +57,13 @@ public class RequestHandler {
 		connections.add(client);
 		
 		// send a copy of the world?
+		
 		List<GameEntity> entities = world.getEntities();
+		System.out.println("Sending information on " + entities.size() + " entities");
 		synchronized (entities) {
 			Iterator i = entities.iterator();
 			while (i.hasNext()) {
+				System.out.println("Sending information about " + i.toString());
 				GameEntity ent = (GameEntity)i.next();
 				if (ent instanceof PlayerEntity) {
 					PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), ent.getID(), 
@@ -75,7 +78,9 @@ public class RequestHandler {
 			}
 		}
 		
-		client.getOut().println(GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getID())));
+		String sendMePls = GameEventParser.translateEvent(new IdAssignmentEvent(System.currentTimeMillis(), client.getID()));
+		client.getOut().println(sendMePls);
+		System.out.println("I have sent output: " + sendMePls);
 	}
 	
 	public void removeClient(int idNum) {

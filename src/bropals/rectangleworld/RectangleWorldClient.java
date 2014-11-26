@@ -79,7 +79,7 @@ public class RectangleWorldClient {
 		this.playerName = playerName;
 		socket = new Socket(address, SERVER_PORT);
 		input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		output = new PrintWriter(socket.getOutputStream());
+		output = new PrintWriter(socket.getOutputStream(), true);
 		cameraX = 0;
 		cameraY = 0;
 		idOfPlayer = -1; // -1 is when it's not set yet
@@ -94,7 +94,7 @@ public class RectangleWorldClient {
 		
 		ClientEventWatcher eventWatcher = new ClientEventWatcher(world, input, output, this);
 		Thread eventWatcherThread = new Thread(eventWatcher);
-		eventWatcherThread.run(); // start listening for events
+		eventWatcherThread.start(); // start listening for events
 		
 		long before, delta;
 		final long mpf = 20; //Milliseconds per frame
@@ -126,6 +126,8 @@ public class RectangleWorldClient {
 						}
 					}
 				}
+				g.setColor(Color.WHITE);
+				g.fillRect(0, 0, 800, 600);
 				//Then draw all the entities
 				drawWorldBoundries(g, world);
 				iterator = entities.iterator();

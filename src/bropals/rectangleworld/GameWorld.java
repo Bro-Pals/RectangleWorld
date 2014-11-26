@@ -42,6 +42,7 @@ public class GameWorld {
 				handleEvent(current);
 			}
 		}
+		eventQueue.clear();
 	}
 	
 	public void handleEvent(GameEvent event) {

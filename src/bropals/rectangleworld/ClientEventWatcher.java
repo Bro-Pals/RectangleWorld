@@ -25,12 +25,16 @@ public class ClientEventWatcher implements Runnable {
 	public void run() {
 		try {
 			String input;
+			System.out.println("Waiting for server input...");
 			while((input = in.readLine()) != null) {
+				System.out.println("Input: " + input);
 				GameEvent event = GameEventParser.parseMessage(input);
 				if (event != null) {
 					if (event instanceof IdAssignmentEvent) {
+						System.out.println("I have gotten an IdAssignmentEvent");
 						daMainClass.makePlayerWithId(((IdAssignmentEvent)event).getID()); // we now have a player!
 					} else {
+						System.out.println("I have gotten an event");
 						world.addEvent(event); // the world will handle other events
 					}
 				}

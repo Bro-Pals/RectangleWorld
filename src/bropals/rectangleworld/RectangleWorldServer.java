@@ -24,14 +24,15 @@ public class RectangleWorldServer {
 		RequestHandler requestHandler = new RequestHandler(server, world);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
+		System.out.println("Waiting for clients...");
 		
 		boolean running = true;
 		while (running) {
 			try {
 				Socket nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);
+				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);				
+				connection.startListening(new Thread(connection));
 				requestHandler.addClient(connection);
-				connection.startListening();
 				System.out.println("Accepted connection from " + nextSocket.getInetAddress().toString() + 
 							"(now have " + requestHandler.getNumberOfClients() + " clients)");
 			} catch(Exception e) {

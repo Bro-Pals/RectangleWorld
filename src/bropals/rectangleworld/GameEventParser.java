@@ -85,7 +85,7 @@ public class GameEventParser {
 			return "" + ere.getTimeStamp()  + SEPARATOR + ENTITY_REMOVE_EVENT + SEPARATOR + ere.getID();
 		} else if (e instanceof PlayerAddEvent) {
 			PlayerAddEvent eae = (PlayerAddEvent)e;
-			return "" + eae.getTimeStamp()  + SEPARATOR + ENTITY_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName() + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
+			return "" + eae.getTimeStamp()  + SEPARATOR + PLAYER_ADD_EVENT + SEPARATOR + eae.getID() + SEPARATOR + eae.getPositionX() + SEPARATOR + eae.getPositionY() + SEPARATOR + getColorID(eae.getColor()) + SEPARATOR + eae.getName() + SEPARATOR + eae.getWidth() + SEPARATOR + eae.getHeight();
 		} else if (e instanceof StartMoveEvent) {
 			StartMoveEvent sme = (StartMoveEvent)e;
 			return "" + sme.getTimeStamp()  + SEPARATOR + START_MOVE_EVENT + SEPARATOR + sme.getID() + SEPARATOR + Direction.getDirectionID(sme.getDirection()) + SEPARATOR + sme.getVelocity();
