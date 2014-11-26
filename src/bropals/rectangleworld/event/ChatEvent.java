@@ -8,7 +8,8 @@ public class ChatEvent extends GameEvent {
 	private int id;
 	private String text;
 	
-	public ChatEvent(int id, String text) {
+	public ChatEvent(long timeStamp, int id, String text) {
+		setTimeStamp(timeStamp);
 		this.id = id;
 		this.text = text;
 	}
