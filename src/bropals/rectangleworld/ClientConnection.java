@@ -16,7 +16,7 @@ public class ClientConnection implements Runnable {
 	private BufferedReader in;
 	private int id;
 	
-	public ClientConnection(Socket s, int idNum, handler) {
+	public ClientConnection(Socket s, int idNum, RequestHandler handler) {
 		this.id = idNum;
 		try {
 			this.socket = s;
