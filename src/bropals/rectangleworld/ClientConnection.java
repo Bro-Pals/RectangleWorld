@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 /**
 	An object that represents a connected client. The server
 	will hold an ArrayList of these to keep track of things.
@@ -30,8 +31,13 @@ public class ClientConnection implements Runnable {
 	@Override
 	public void run() {
 		String input;
-		while (!socket.isClosed() && (input = in.readLine()) != null) {
-			handler.handleRequest(input, id);
+		try {
+			while (!socket.isClosed() && (input = in.readLine()) != null) {
+				handler.handleRequest(input, id);
+			}
+		} catch(IOException e) {
+			System.out.println("IO Error: " + e.toString());
+			//Need to have the server disconnect this connection
 		}
 	}
 	

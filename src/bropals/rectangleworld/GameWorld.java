@@ -1,5 +1,7 @@
 package bropals.rectangleworld;
 
+import java.util.ArrayList;
+
 public class GameWorld {
 	
 	private ArrayList<GameEvent> eventQueue;

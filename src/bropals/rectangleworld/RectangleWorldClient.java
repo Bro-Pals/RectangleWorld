@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
-import java.net.IOException;
+import java.io.IOException;
 
 public class RectangleWorldClient {
 
@@ -40,8 +40,8 @@ public class RectangleWorldClient {
 					RectangleWorldClient client = null;
 					try {
 						client = new RectangleWorldClient(playerName, address);
-					} catch(IOException e) {
-						JOptionPane.showMessageDialog(dialog, "Error making client: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+					} catch(IOException ioe) {
+						JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 					if (client!=null) {
 						System.out.println("Successfully established a connection with the server at " + address.toString());

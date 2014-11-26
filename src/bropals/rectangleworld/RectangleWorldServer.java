@@ -3,14 +3,21 @@ package bropals.rectangleworld;
 import java.net.Socket;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.io.IOException;
 
 public class RectangleWorldServer {
 
 	public static final int SERVER_PORT = 18002;
 
 	public static void main(String[] args) {
-		
-		ServerSocket server = new ServerSocket(SERVER_PORT);
+		ServerSocket server = null;
+		try {
+			server = new ServerSocket(SERVER_PORT);
+		} catch(IOException fsfs) {
+			System.err.println("Unable to create server at socket " + SERVER_PORT + ": " + fsfs.toString());
+			//Just stop the program
+			return;
+		}
 		RequestHandler requestHandler = new RequestHandler(server);
 		ArrayList<Thread> threads = new ArrayList<>();
 		
@@ -30,7 +37,10 @@ public class RectangleWorldServer {
 				running = false;
 			}
 		}
-		
-		server.close();
+		try {
+			server.close();
+		} catch(IOException fsfs2) {
+			System.err.println("Unable to close the server at socket " + SERVER_PORT + ": " + fsfs2.toString());
+		}
 	}
 }

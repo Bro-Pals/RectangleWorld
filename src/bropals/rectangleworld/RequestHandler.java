@@ -14,10 +14,9 @@ public class RequestHandler {
 	private ArrayList<ClientConnection> clients;
 	private ServerSocket server;
 	
-	public void RequestHandler(ServerSocket s) {
+	public RequestHandler(ServerSocket s) {
 		this.clients = new ArrayList<>();
 		this.server = s;
-		nextId = 0;
 	}
 	
 	public void handleRequest(String msg, int id) {
