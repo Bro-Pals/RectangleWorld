@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 import java.io.IOException;
+import java.awt.Graphics;
+import java.util.ArrayList;
+import horsentp.simpledrawing.DrawWindow;
 
 public class RectangleWorldClient {
 
@@ -47,18 +50,36 @@ public class RectangleWorldClient {
 						System.out.println("Successfully established a connection with the server at " + address.toString());
 						System.out.println();
 						//Client established the connection properly
+						DrawWindow window = new DrawWindow("RectangleWorld", 800, 600, false);
+						getWorldFromServer();
 						
+						while (window.exists()) {
+							Graphics g = window.getDrawGraphics();
+							ArrayList<GameEntity> entities = world.getEntities();
+							for (int i=0; i<entities.size(); i++) {
+								g.setColor(entities.get(i).getColor());
+								g.fillRect((int)entities.get(i).getX(),
+											(int)entities.get(i).getY(),
+											(int)entities.get(i).getWidth(),
+											(int)entities.get(i).getHeight());
+							}
+							
+							window.showBuffer(g);
+							try { Thread.sleep(40); } catch(Exception threade) {} // sleep
+						}
 					}
 				}
 			}
 		});
+		
+		
 	}
 	
 	private String playerName;
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-	private GameWorld world;
+	private static GameWorld world;
 	
 	public RectangleWorldClient(String playerName, InetAddress address) throws IOException {
 		this.playerName = playerName;
@@ -67,7 +88,7 @@ public class RectangleWorldClient {
 		output = new PrintWriter(socket.getOutputStream());
 	}
 	
-	public void getWorldFromServer() {
+	public static void getWorldFromServer() {
 		world = new GameWorld();
 	}
 }
