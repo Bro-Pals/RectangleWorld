@@ -27,12 +27,12 @@ public class GameEventParser {
 		switch(eventId) {
 			case START_MOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
+				direction = Direction.getDirectionByID(Integer.parseInt(paramList[3]));
 				float vel = Float.parseFloat(paramList[4]);
 				return new StartMoveEvent(timeStamp, id, direction, vel);
 			case STOP_MOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
-				direction = Direction.getDirectionByID(Ingeger.parseInt(paramList[3]));
+				direction = Direction.getDirectionByID(Integer.parseInt(paramList[3]));
 				float posDir = Integer.parseInt(paramList[4]);
 				return new StopMoveEvent(timeStamp, id, direction, posDir);
 			case ENTITY_ADD_EVENT:
@@ -54,12 +54,11 @@ public class GameEventParser {
 				id = Integer.parseInt(paramList[2]);
 				String text = paramList[3];
 				return new ChatEvent(timeStamp, id, text);
-				break;
 			case PLAYER_ADD_EVENT:
 				id = Integer.parseInt(paramList[2]);
 				posX = Float.parseFloat(paramList[3]);
 				posY = Float.parseFloat(paramList[4]);
-				Color color = getColorFromID(Integer.parseInt(paramList[5]));
+				color = getColorFromID(Integer.parseInt(paramList[5]));
 				String name = paramList[6];
 				width = Float.parseFloat(paramList[7]);
 				height = Float.parseFloat(paramList[8]);
