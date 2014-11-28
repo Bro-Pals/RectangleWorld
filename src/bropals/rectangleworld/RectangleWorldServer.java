@@ -26,8 +26,7 @@ public class RectangleWorldServer {
 		GameWorld world = new GameWorld(); // the server's copy of game world
 		initWorld(world);
 		RequestHandler requestHandler = new RequestHandler(world, serverDialog, server);
-		Thread requestHandlerThread = new Thread(requestHandler);
-		requestHandlerThread.start();
+		requestHandler.start();
 		
 	}
 	
