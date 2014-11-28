@@ -67,7 +67,7 @@ public class RectangleWorldClient {
 					input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					output = new PrintWriter(socket.getOutputStream(), true);
 					world = new GameWorld();
-					eventWatcher = eventWatcher = new ClientEventWatcher(world, input, output);
+					eventWatcher = new ClientEventWatcher(world, input, output);
 					eventWatcher.start(); // start listening for events
 				} catch(IOException ioe) {
 					JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -83,8 +83,7 @@ public class RectangleWorldClient {
 					dialog.dispose(); //Don't need the dialog anymore.
 					loop(); // start the game loop
 				} else {
-					//Could not connect, open the dialog again
-					dialog.setVisible(true);
+					dialog.dispose();
 				}
 			}
 		} else {
