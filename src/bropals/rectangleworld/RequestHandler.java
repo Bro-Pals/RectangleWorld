@@ -7,20 +7,48 @@ import java.util.Iterator;
 import java.util.Collections;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
 	Object that will hold a list of ClientConnection objects and listens
 	for input from them, broadcasting any messages. Also handles the 
 	special request of new connections.
 */
-public class RequestHandler {
+public class RequestHandler extends Thread {
 	
 	private ArrayList<ClientConnection> connections;
 	private GameWorld world;
+	private ServerDialog serverDialog;
+	private ServerSocket server;
 	
-	public RequestHandler(GameWorld w) {
+	public RequestHandler(GameWorld w, ServerDialog sd, ServerSocket ss) {
 		this.connections = new ArrayList<ClientConnection>();
 		this.world = w;
+		this.serverDialog = sd;
+		this.server = ss;
+	}
+	
+	@Override
+	public void run() {
+		Socket nextSocket;
+		while (serverDialog.isRunning()) {
+			try {
+				serverDialog.print("Waiting for another client");
+				nextSocket = server.accept();
+				ClientConnection connection = new ClientConnection(nextSocket, RectangleWorldServer.getNewId(), this);	
+				addClient(connection);
+				connection.start();
+				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 
+					"(now have " + this.getNumberOfClients() + " clients)");
+			} catch(SocketException socketException) {
+				System.out.println("Server got shutdown: " + socketException.toString());
+				/* Need to shutdown all clients here */
+				
+			} catch(Exception e) {
+				System.out.println("Error in main class: " + e.toString());
+			}
+		}
+		serverDialog.dispose();
 	}
 	
 	
@@ -49,12 +77,14 @@ public class RequestHandler {
 		}
 		System.out.println("Broadcasted to " + connections.size() + " clients");
 	}
-	
+
+	/**
+		Sends information about the world to the client and also gives it
+		it's ID number
+	*/
 	public void addClient(ClientConnection client) {
 		connections.add(client);
-		
-		// send a copy of the world?
-		
+
 		ArrayList<GameEntity> entities = world.getEntities();
 		System.out.println("Sending information on " + entities.size() + " entities");
 		Iterator i = entities.iterator();

@@ -36,6 +36,7 @@ public class RectangleWorldClient {
 		});		
 	}
 	
+	
 	public static void initClient(final ClientConnectDialog dialog) {
 		dialog.setVisible(false);
 		if (dialog.validInputs()) {
@@ -43,7 +44,7 @@ public class RectangleWorldClient {
 				When the go button is pressed, connect the client to the server
 				with the information provided.
 			*/
-			String playerName = dialog.getName();
+			playerName = dialog.getName();
 			
 			InetAddress address = null;
 			try {
@@ -56,20 +57,28 @@ public class RectangleWorldClient {
 					Continue creating the world. Error box popped up if the 
 					address location is unknown (UnknownHostException)
 				*/
-				RectangleWorldClient client = null;
+				System.out.println("Attempting connection through address " + address.toString());
+				eventWatcher = null;
 				try {
-					Socket socket = new Socket(address, SERVER_PORT);
-					client = new RectangleWorldClient(playerName, socket);
+					socket = new Socket(address, SERVER_PORT);
+					input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					output = new PrintWriter(socket.getOutputStream(), true);
+					world = new GameWorld();
+					eventWatcher = eventWatcher = new ClientEventWatcher(world, input, output);
+					eventWatcher.start(); // start listening for events
 				} catch(IOException ioe) {
 					JOptionPane.showMessageDialog(dialog, "Error making client: " + ioe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-					client = null;
+					eventWatcher = null;
 				}
-				if (client!=null) {
+				if (eventWatcher!=null) {
 					System.out.println("Successfully established a connection with the server at " + address.toString());
 					System.out.println();
+					// initial values
+					cameraX = 0;
+					cameraY = 0;
+					idOfPlayer = -1; // -1 is when it's not set yet
 					dialog.dispose(); //Don't need the dialog anymore.
-					client.loop();
-					client.onWindowCloseRequest();
+					loop(); // start the game loop
 				} else {
 					//Could not connect, open the dialog again
 					dialog.setVisible(true);
@@ -82,26 +91,20 @@ public class RectangleWorldClient {
 		}
 	}
 	
-	private String playerName;
-	private Socket socket;
-	private BufferedReader input;
-	private PrintWriter output;
+	
+	// pro-core object orientated programming
+	private static Socket socket;
+	private static BufferedReader input;
+	private static PrintWriter output;
+	
+	private static String playerName;
 	private static GameWorld world;
-	private float cameraX, cameraY;
-	private int idOfPlayer;
-	private DrawWindow window;
+	private static float cameraX, cameraY;
+	private static int idOfPlayer;
+	private static DrawWindow window;
+	private static ClientEventWatcher eventWatcher;
 	
-	public RectangleWorldClient(String playerName, Socket socket) throws IOException {
-		this.playerName = playerName;
-		this.socket = socket;
-		input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		output = new PrintWriter(socket.getOutputStream(), true);
-		cameraX = 0;
-		cameraY = 0;
-		idOfPlayer = -1; // -1 is when it's not set yet
-	}
-	
-	public void loop() {
+	public static void loop() {
 		window = new DrawWindow("RectangleWorld", 800, 600, false);
 		/* Have something happen if the user wants to close the window */
 		window.getRawFrame().addWindowListener(new WindowAdapter() { 
@@ -114,12 +117,6 @@ public class RectangleWorldClient {
 		Graphics g = window.getDrawGraphics();
 		g.drawString("Waiting for world..", 100, 100);
 		window.showBuffer(g);
-		world = new GameWorld();
-		
-		ClientEventWatcher eventWatcher = new ClientEventWatcher(world, input, output, this);
-		Thread eventWatcherThread = new Thread(eventWatcher);
-		eventWatcherThread.start(); // start listening for events
-		
 		
 		long before, delta;
 		final long mpf = 20; //Milliseconds per frame
@@ -160,15 +157,17 @@ public class RectangleWorldClient {
 				next = (GameEntity)iterator.next();
 				drawGameEntity(g, next);
 			}
-		}
-		window.showBuffer(g);
-		delta = System.currentTimeMillis()-before;
-		if (delta < mpf) {
-			try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
+			
+			window.showBuffer(g);
+			delta = System.currentTimeMillis()-before;
+			if (delta < mpf) {
+				try { Thread.sleep(mpf - delta); } catch(Exception threade) {} // sleep
+			}
+			
 		}
 	}
 	
-	public void onWindowCloseRequest() {
+	public static void onWindowCloseRequest() {
 		//Need to close connection here
 		System.out.println("Quitting");
 		try {
@@ -189,7 +188,7 @@ public class RectangleWorldClient {
 		window.destroy();
 	}
 	
-	public void makePlayerWithId(int id) {
+	public static void makePlayerWithId(int id) {
 		if (idOfPlayer == -1) { // if the player id is NOT set yet
 			idOfPlayer = id;
 			PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), idOfPlayer, 
@@ -200,17 +199,17 @@ public class RectangleWorldClient {
 		}
 	}
 	
-	public void setCameraPosition(float x, float y) {
+	public static void setCameraPosition(float x, float y) {
 		cameraX = x;
 		cameraY = y;
 	}
 	
-	public void translateCamera(float x, float y) {
+	public static void translateCamera(float x, float y) {
 		cameraX += x;
 		cameraY += y;
 	}
 	
-	private void handleWindowInput() {
+	private static void handleWindowInput() {
 		KeyEvent k;
 		MouseEvent m;
 		while ((k = window.nextKeyPressedEvent()) != null) {
@@ -229,7 +228,7 @@ public class RectangleWorldClient {
 		}
 	}
 	
-	public void drawWorldBoundries(Graphics g, GameWorld world) {
+	public static void drawWorldBoundries(Graphics g, GameWorld world) {
 		g.setColor(Color.BLACK);
 		g.drawLine( //Right boundry line
 			(int)(world.getBoundryRight()-cameraX), 
@@ -257,7 +256,7 @@ public class RectangleWorldClient {
 		);
 	}
 	
-	public void drawGameEntity(Graphics g, GameEntity ge) {
+	public static void drawGameEntity(Graphics g, GameEntity ge) {
 		g.setColor(ge.getColor());
 		g.fillRect((int)(ge.getX()-cameraX),
 			(int)(ge.getY()-cameraY),

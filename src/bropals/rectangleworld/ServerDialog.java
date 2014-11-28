@@ -19,7 +19,7 @@ public class ServerDialog extends JFrame {
 	public ServerDialog(ServerSocket server) {
 		this.server = server;
 		setTitle("Rectangle World server");
-		running = true;
+		running = true; // it's running
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent we) {
@@ -46,6 +46,12 @@ public class ServerDialog extends JFrame {
 			System.err.println("ServerDialog: Unable to shutdown server");
 		}
 		running = false;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		running = false; // not running when the window is gone
 	}
 	
 	public boolean isRunning() {

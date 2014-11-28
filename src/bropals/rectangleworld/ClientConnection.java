@@ -9,21 +9,19 @@ import java.io.IOException;
 	An object that represents a connected client. The server
 	will hold an ArrayList of these to keep track of things.
 */
-public class ClientConnection implements Runnable {
+public class ClientConnection extends Thread {
 
 	private RequestHandler handler;
 	private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
 	private int id;
-	private Thread myThread;
 	
 	public ClientConnection(Socket s, int idNum, RequestHandler handler) throws IOException {
 		this.id = idNum;
 		this.handler = handler;
 		this.socket = s;
-		this.myThread = new Thread(this);
-		out = new PrintWriter(s.getOutputStream(), true);
+		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	

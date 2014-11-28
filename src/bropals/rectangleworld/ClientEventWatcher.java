@@ -8,18 +8,16 @@ import bropals.rectangleworld.event.*;
 	Takes in GameEvents from the server and sends it to the GameWorld.
 	Also sets the Client's player entity class
 */
-public class ClientEventWatcher implements Runnable {
+public class ClientEventWatcher extends Thread {
 	
 	private BufferedReader in; // the reader it's listening for events from
 	private GameWorld world; // the world it's sending events to
 	private PrintWriter out;
-	private RectangleWorldClient daMainClass; // so it can tell it to set it's special player
 	
-	public ClientEventWatcher(GameWorld world, BufferedReader in, PrintWriter out, RectangleWorldClient rwc) {
-		this.in=in;
-		this.out=out;
-		this.daMainClass = rwc;
-		this.world=world;
+	public ClientEventWatcher(GameWorld w, BufferedReader i, PrintWriter o) {
+		this.in=i;
+		this.out=o;
+		this.world=w;
 	}
 	
 	@Override
@@ -33,8 +31,8 @@ public class ClientEventWatcher implements Runnable {
 				GameEvent event = GameEventParser.parseMessage(input);
 				if (event != null) {
 					if (event instanceof IdAssignmentEvent) {
-						System.out.println("I have gotten an IdAssignmentEvent");
-						daMainClass.makePlayerWithId(((IdAssignmentEvent)event).getID()); // we now have a player!
+						System.out.println("I have gotten an IdAssignmentEvent!!");
+						RectangleWorldClient.makePlayerWithId(((IdAssignmentEvent)event).getID()); // we now have a player!
 					} else {
 						System.out.println("I have gotten an event");
 						world.addEvent(event); // the world will handle other events

@@ -25,28 +25,10 @@ public class RectangleWorldServer {
 		}
 		GameWorld world = new GameWorld(); // the server's copy of game world
 		initWorld(world);
-		RequestHandler requestHandler = new RequestHandler(world);
+		RequestHandler requestHandler = new RequestHandler(world, serverDialog, server);
+		Thread requestHandlerThread = new Thread(requestHandler);
+		requestHandlerThread.start();
 		
-		Socket nextSocket;
-		while (serverDialog.isRunning()) {
-			try {
-				System.out.println("LOOP : RectangleWorldServer:33");
-				serverDialog.print("Waiting for another client");
-				nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, getNewId(), requestHandler);	
-				new Thread(connection).start();
-				requestHandler.addClient(connection);
-				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 
-					"(now have " + requestHandler.getNumberOfClients() + " clients)");
-			} catch(SocketException socketException) {
-				System.out.println("Server got shutdown: " + socketException.toString());
-				/* Need to shutdown all clients here */
-				
-			} catch(Exception e) {
-				System.out.println("Error in main class: " + e.toString());
-			}
-		}
-		serverDialog.dispose();
 	}
 	
 	public static int getNewId() {
