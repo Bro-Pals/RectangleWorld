@@ -106,6 +106,8 @@ public class RectangleWorldClient {
 	
 	public static void loop() {
 		window = new DrawWindow("RectangleWorld - " + playerName, 800, 600, false);
+		window.getRawFrame().setFocusable(true);
+		window.getRawFrame().requestFocus();
 		/* Have something happen if the user wants to close the window */
 		window.getRawFrame().addWindowListener(new WindowAdapter() { 
 			@Override
@@ -209,17 +211,19 @@ public class RectangleWorldClient {
 	
 	private static void handleWindowInput() {
 		//System.out.println("handling window input");
-		KeyEvent k;
-		MouseEvent m;
+		KeyEvent k = null;
+		MouseEvent m = null;;
 		GameEntity plyEnt = world.getEntity(idOfPlayer); // at least it should be
 		int playerSpeed = 2;
 		
 		while ((k = window.nextKeyPressedEvent()) != null) {
+			//System.out.println(k.toString());
 			if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				onWindowCloseRequest();
 			}
 			// handle player starting to move
 			if (plyEnt != null) {
+				System.out.println("We found da player and are about to make him do things");
 				switch (k.getKeyCode()) {
 					case KeyEvent.VK_W:
 						localAddAndSendEvent(new StartMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
@@ -242,6 +246,7 @@ public class RectangleWorldClient {
 				System.out.println("Could not find the player");
 			}
 		}
+		k = null;
 		while ((k = window.nextKeyReleasedEvent()) != null) {
 			// handle player stop moving
 			if (plyEnt != null) {
@@ -260,10 +265,12 @@ public class RectangleWorldClient {
 			}
 		}
 		while ((m = window.nextMousePressedEvent()) != null) {
-			
+			System.out.println("Handled mouse pressed event");
 		}
+		m = null;
 		while ((m = window.nextMouseReleasedEvent()) != null) {
-			
+			System.out.println("Handled mouse released event");
+
 		}
 		//System.out.println("All done with window events");
 	}
