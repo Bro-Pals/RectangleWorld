@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 /**
 	Object that will hold a list of ClientConnection objects and listens
@@ -30,12 +34,18 @@ public class RequestHandler extends Thread {
 	
 	@Override
 	public void run() {
-		Socket nextSocket;
+		//Socket nextSocket;
 		while (serverDialog.isRunning()) {
 			try {
 				serverDialog.print("Waiting for another client");
-				nextSocket = server.accept();
-				ClientConnection connection = new ClientConnection(nextSocket, RectangleWorldServer.getNewId(), this);	
+				Socket nextSocket = server.accept();
+				ClientConnection connection = new ClientConnection(
+					nextSocket, 
+					new BufferedReader(new InputStreamReader(nextSocket.getInputStream())),
+					new PrintWriter(nextSocket.getOutputStream(), true),
+					RectangleWorldServer.getNewId(), 
+					this
+				);	
 				addClient(connection);
 				connection.start();
 				serverDialog.print("Accepted connection from " + nextSocket.getInetAddress().toString() + 

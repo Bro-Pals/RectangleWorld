@@ -17,12 +17,12 @@ public class ClientConnection extends Thread {
 	private BufferedReader in;
 	private int id;
 	
-	public ClientConnection(Socket s, int idNum, RequestHandler handler) throws IOException {
+	public ClientConnection(Socket s, BufferedReader in, PrintWriter out, int idNum, RequestHandler handler) throws IOException {
 		this.id = idNum;
 		this.handler = handler;
 		this.socket = s;
-		out = new PrintWriter(socket.getOutputStream(), true);
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		this.in = in;
+		this.out = out;
 	}
 	
 	@Override
