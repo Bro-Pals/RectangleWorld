@@ -34,7 +34,7 @@ public class GameEventParser {
 			case STOP_MOVE_EVENT:
 				id = Integer.parseInt(paramList[2]);
 				direction = Direction.getDirectionByID(Integer.parseInt(paramList[3]));
-				float posDir = Integer.parseInt(paramList[4]);
+				float posDir = Float.parseFloat(paramList[4]);
 				return new StopMoveEvent(timeStamp, id, direction, posDir);
 			case ENTITY_ADD_EVENT:
 				id = Integer.parseInt(paramList[2]);
