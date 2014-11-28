@@ -67,6 +67,7 @@ public class GameWorld {
 			PlayerAddEvent pae = (PlayerAddEvent)event;
 			entities.add(new PlayerEntity(pae.getID(), this, pae.getColor(), pae.getPositionX(), 
 				 pae.getPositionY(), pae.getWidth(), pae.getHeight(), pae.getName()));
+			 System.out.println("Made a player with the ID of " + pae.getID());
 		} else if (event instanceof StartMoveEvent) {
 			GameEntity ent = getEntity(event.getID());
 			StartMoveEvent sme = (StartMoveEvent)event;

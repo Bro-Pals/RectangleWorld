@@ -105,7 +105,7 @@ public class RectangleWorldClient {
 	private static ClientEventWatcher eventWatcher;
 	
 	public static void loop() {
-		window = new DrawWindow("RectangleWorld", 800, 600, false);
+		window = new DrawWindow("RectangleWorld - " + playerName, 800, 600, false);
 		/* Have something happen if the user wants to close the window */
 		window.getRawFrame().addWindowListener(new WindowAdapter() { 
 			@Override
@@ -193,9 +193,7 @@ public class RectangleWorldClient {
 			idOfPlayer = id;
 			PlayerAddEvent pae = new PlayerAddEvent(System.currentTimeMillis(), idOfPlayer, 
 				150, 150, 50, 50, Color.RED, playerName);
-			world.addEvent(pae);
-			output.println(GameEventParser.translateEvent(pae)); // send it over to the serve
-			System.out.println("I have created a player and told the server all about it");
+			localAddAndSendEvent(pae);
 		}
 	}
 	
@@ -210,15 +208,56 @@ public class RectangleWorldClient {
 	}
 	
 	private static void handleWindowInput() {
+		//System.out.println("handling window input");
 		KeyEvent k;
 		MouseEvent m;
+		GameEntity plyEnt = world.getEntity(idOfPlayer); // at least it should be
+		int playerSpeed = 2;
+		
 		while ((k = window.nextKeyPressedEvent()) != null) {
 			if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				onWindowCloseRequest();
 			}
+			// handle player starting to move
+			if (plyEnt != null) {
+				switch (k.getKeyCode()) {
+					case KeyEvent.VK_W:
+						localAddAndSendEvent(new StartMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.NORTH_SOUTH, -playerSpeed));
+						break;
+					case KeyEvent.VK_S:
+						localAddAndSendEvent(new StartMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.NORTH_SOUTH, playerSpeed));
+						break;
+					case KeyEvent.VK_A:
+						localAddAndSendEvent(new StartMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.EAST_WEST, -playerSpeed));
+						break;
+					case KeyEvent.VK_D:
+						localAddAndSendEvent(new StartMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.EAST_WEST, playerSpeed));
+						break;
+				}
+			} else {
+				System.out.println("Could not find the player");
+			}
 		}
 		while ((k = window.nextKeyReleasedEvent()) != null) {
-			
+			// handle player stop moving
+			if (plyEnt != null) {
+				switch (k.getKeyCode()) {
+					case KeyEvent.VK_W:
+					case KeyEvent.VK_S:
+						localAddAndSendEvent(new StopMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.NORTH_SOUTH, plyEnt.getY()));
+						break;
+					case KeyEvent.VK_A:
+					case KeyEvent.VK_D:
+						localAddAndSendEvent(new StopMoveEvent(System.currentTimeMillis(), plyEnt.getID(), 
+								Direction.EAST_WEST, plyEnt.getX()));
+						break;
+				}
+			}
 		}
 		while ((m = window.nextMousePressedEvent()) != null) {
 			
@@ -226,6 +265,13 @@ public class RectangleWorldClient {
 		while ((m = window.nextMouseReleasedEvent()) != null) {
 			
 		}
+		//System.out.println("All done with window events");
+	}
+	
+	private static void localAddAndSendEvent(GameEvent e) {
+		System.out.println("Sending event");
+		world.addEvent(e);
+		output.println(GameEventParser.translateEvent(e));
 	}
 	
 	public static void drawWorldBoundries(Graphics g, GameWorld world) {

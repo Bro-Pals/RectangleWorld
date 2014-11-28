@@ -35,7 +35,7 @@ public class ClientEventWatcher extends Thread {
 						RectangleWorldClient.makePlayerWithId(((IdAssignmentEvent)event).getID()); // we now have a player!
 					} else {
 						System.out.println("I have gotten an event");
-						world.addEvent(event); // the world will handle other events
+						world.addEvent(event); // the world will handle other events it got
 					}
 				}
 			}
