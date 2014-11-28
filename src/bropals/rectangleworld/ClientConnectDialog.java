@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -29,6 +30,8 @@ public class ClientConnectDialog extends JFrame {
 	*/
 	private JButton go;
 	
+	private boolean waiting;
+	
 	public ClientConnectDialog() {
 		setTitle("Rectangle World: Join a server");
 		setLayout(new GridLayout(3, 2, 20, 20));
@@ -45,6 +48,13 @@ public class ClientConnectDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		waiting = true;
+		go.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				waiting = false;
+			}
+		});
 	}
 	
 	/**
@@ -61,10 +71,6 @@ public class ClientConnectDialog extends JFrame {
 		return InetAddress.getByName(ip.getText());
 	}
 	
-	public void addGoButtonActionListener(ActionListener al) {
-		go.addActionListener(al);
-	}
-	
 	public boolean validInputs() {
 		boolean valid = true;
 		char[] array = name.getText().toCharArray();
@@ -75,5 +81,9 @@ public class ClientConnectDialog extends JFrame {
 			}
 		}
 		return valid && array.length <= 25;
+	}
+	
+	public boolean waiting() {
+		return waiting;
 	}
 }

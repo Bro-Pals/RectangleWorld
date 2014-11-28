@@ -28,12 +28,14 @@ public class RectangleWorldClient {
 
 	public static void main(String[] args) {
 		final ClientConnectDialog dialog = new ClientConnectDialog();
-		dialog.addGoButtonActionListener(new ActionListener() { 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				initClient(dialog);
+		while(dialog.waiting()) {
+			try {
+				Thread.sleep(5);
+			} catch(Exception e) {
+				
 			}
-		});		
+		}
+		initClient(dialog);
 	}
 	
 	
