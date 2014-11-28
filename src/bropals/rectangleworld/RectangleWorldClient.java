@@ -53,6 +53,7 @@ public class RectangleWorldClient {
 				address = dialog.getIPAddress();
 			} catch(UnknownHostException uhe) {
 				JOptionPane.showMessageDialog(dialog, "Error with server address: " + uhe.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+				dialog.dispose();
 			}
 			if (address!=null) {
 				/*
@@ -89,7 +90,7 @@ public class RectangleWorldClient {
 		} else {
 			//Invalid input, tell them the error
 			JOptionPane.showMessageDialog(dialog, "Invalid name: name must be 25 characters or less and it must not contain \"" + GameEventParser.SEPARATOR + "\"", "Sorry! Invalid name", JOptionPane.ERROR_MESSAGE);
-			dialog.setVisible(true);
+			dialog.dispose();
 		}
 	}
 	
